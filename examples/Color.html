@@ -1,42 +1,50 @@
 <script language="javascript" src="p5.js"></script>
-<script language="javascript" src="../build/ijeomamotion.js"></script>
+<script language="javascript" src="ijeomamotion.js"></script>
+<script language="javascript" src="../build/p5.ijeomamotion.js"></script>
 <script language="javascript">
- 
-var c 
+var c, t; 
 
 function setup() {
-    createCanvas(720, 400);
+    createCanvas(windowWidth, windowHeight);
     noStroke(); 
 
-    c = color(0);
-    t = new MOTION.Tween(100).add('c', color(255)).play(); 
+    c = randomColor();
+    t = new MOTION.Tween(100).add('c', randomColor())
+        .relative()
+        .play()
+        .onEnd(function(){
+            this.get('c').setEnd(randomColor())
+            this.play();
+        });
 }
  
-function draw() {
-    background(c); 
+function draw() { 
+    fill(c);
+    rect(0,0,width,height);
+}
+
+function mousePressed() {
+    t.pause();
 }
 
 function mouseDragged() {
-    t.seek(mouseX / width)
+    t.seek(mouseX / width);
 }
 
-function keyTyped() {
-    if (key == 'a')
-        t.pause();
-    else if (key == 's')
-        t.resume();
-    else if (key == 'd')
-        t.play();
-    else if (key == 'f')
-        t.stop();
+function mouseReleased() {
+    t.resume();
+}
+
+function randomColor() {
+    return color(random(255),random(255),random(255))
 }
 </script>
 <style>
 body {
     padding: 0;
+    margin: 0;
 }
-</style>
-<!-- this line removes any default padding -->
+</style> 
 </head>
 
 <body>

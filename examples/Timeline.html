@@ -1,16 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-
 <head>
-    <title>Tween.js / simplest possible example!</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-</head>
-
-<body>
-    <script type="text/javascript" src="p5.js"></script>
-    <script type="text/javascript" src="../build/ijeomamotion.js"></script>
-    <script type="text/javascript">
-    // alert('motiontest');
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
     var c1, c2, c3;
     var y1, y2, y3;
     var w;
@@ -18,30 +10,34 @@
     var tl;
 
     function setup() {
-        createCanvas(600, 300);
+        createCanvas(windowWidth, windowHeight);
         smooth();
 
-        c1 = c2 = c3 = color(255);
+        c1 = randomColor(), c2 = randomColor(), c3 = randomColor();
         y1 = y2 = y3 = -height;
         w = width / 5;
 
         var d = 25;
 
-        tl = new MOTION.Timeline();
+        tl = beginTimeline();
+        
+        beginKeyframe(0);
+        tween(d).add("y1", height).add("c1", randomColor());
+        endKeyframe();
 
-        tl.add(new MOTION.Tween(d)
-            .add("y1", height)
-            .add("c1", color(0)), 0);
+        beginKeyframe(50);
+        tween(d).add("y2", height).add("c2", randomColor());
+        endKeyframe();
 
-        tl.add(new MOTION.Tween(d)
-            .add("y2", height)
-            .add("c2", color(0)), d * 2);
+        beginKeyframe(100);
+        tween(d).add("y3", height).add("c3", randomColor());
+        endKeyframe();
 
-        tl.add(new MOTION.Tween(d)
-            .add("y3", height)
-            .add("c3", color(0)), d * 4);
+        endTimeline();
 
-        tl.repeat().reverse().play();
+        repeat();
+        reverse();
+        play();
     }
 
     function draw() {
@@ -62,19 +58,19 @@
 
         var time = tl.get(0).getTime() + " / " + tl.get(0).getDuration();
         fill((tl.get(0).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
-        text(time, 0, height - 10);
+        text(time, 25, height - 25);
 
         time = tl.get(1).getTime() + " / " + tl.get(1).getDuration();
         fill((tl.get(1).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
-        text(time, w * 2, height - 10);
+        text(time, w * 2 + 25, height - 25);
 
         time = tl.get(2).getTime() + " / " + tl.get(2).getDuration();
         fill((tl.get(2).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
-        text(time, w * 4, height - 10);
+        text(time, w * 4 + 25, height - 25);
 
         time = tl.getTime() + " / " + tl.getDuration();
         fill(0);
-        text(time, width - textWidth(time) - 10, 10 + 12);
+        text(time, width - textWidth(time) - 25, 25);
     }
 
 
@@ -85,10 +81,6 @@
             tl.gotoAndPlay(50);
         else if (key == '3')
             tl.gotoAndPlay(100);
-        else if (key == '4')
-            tl.gotoAndPlay(150);
-        else if (key == '5')
-            tl.gotoAndPlay(200);
         else
             tl.play();
     }
@@ -106,7 +98,14 @@
     function mouseDragged() {
         tl.seek(norm(mouseX, 0, width));
     }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255));
+    }
     </script>
+</head>
+
+<body>
 </body>
 
 </html>

@@ -1,7 +1,16 @@
 module.exports = function(grunt) {
     // 1. All configuration goes here 
     grunt.initConfig({
-        pkg: grunt.file.readJSON('package.json'), 
+        pkg: grunt.file.readJSON('package.json'),
+        concat: {
+            options: {
+                separator: ';',
+            },
+            dist: {
+                src: ['src/p5.ijeomamotion.js'],
+                dest: 'build/p5.ijeomamotion.js',
+            },
+        },
         uglify: {
             build: {
                 src: 'build/p5.ijeomamotion.js',
@@ -19,9 +28,10 @@ module.exports = function(grunt) {
             }
         }
     });
- 
+
+    grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
-    grunt.registerTask('default', ['uglify', 'watch']);
+    grunt.registerTask('default', ['concat', 'uglify', 'watch']);
 };
