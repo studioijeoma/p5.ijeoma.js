@@ -194,13 +194,10 @@
             _current.play();
     };
 
-    p5.prototype.repeat = function(motion, duration) {
-        if (typeof arguments[0] === 'string')
-            find(arguments[0]).repeat(arguments[1]);
-        else if (typeof arguments[0] === 'object')
-            arguments[0].repeat(arguments[1]);
-        else
-            _current.repeat(arguments[0]);
+    p5.prototype.playAll = function() {
+        for(var i = 0; i < _motions.length; i++)
+            if(!_motions[i]._hasController)
+                _motions[i].play();
     };
 
     p5.prototype.stop = function(motion) {
@@ -212,6 +209,12 @@
             _current.stop();
     };
 
+    p5.prototype.stopAll = function() {
+        for(var i = 0; i < _motions.length; i++)
+            if(!_motions[i]._hasController)
+                _motions[i].stop();
+    };
+
     p5.prototype.pause = function(motion) {
         if (typeof arguments[0] === 'string')
             find(arguments[0]).pause();
@@ -219,6 +222,12 @@
             arguments[0].pause()
         else
             _current.pause();
+    };
+
+    p5.prototype.pauseAll = function() {
+        for(var i = 0; i < _motions.length; i++)
+            if(!_motions[i]._hasController)
+                _motions[i].pause();
     };
 
     p5.prototype.resume = function(motion) {
@@ -230,6 +239,12 @@
             _current.resume();
     };
 
+    p5.prototype.resumeAll = function() {
+        for(var i = 0; i < _motions.length; i++)
+            if(!_motions[i]._hasController)
+                _motions[i].resume();
+    };
+
     p5.prototype.seek = function(motion, t) {
         if (typeof arguments[0] === 'string')
             find(arguments[0]).seek(arguments[1]);
@@ -239,13 +254,26 @@
             _current.seek(arguments[0]);
     };
 
-    p5.prototype.repeat = function(motion) {
+    p5.prototype.seekAll = function(t) {
+        for(var i = 0; i < _motions.length; i++)
+            if(!_motions[i]._hasController)
+                _motions[i].seek(t);
+    };
+
+
+    p5.prototype.repeat = function(motion, duration) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).repeat();
+            find(arguments[0]).repeat(arguments[1]);
         else if (typeof arguments[0] === 'object')
-            arguments[0].repeat();
+            arguments[0].repeat(arguments[1]);
         else
-            _current.repeat();
+            _current.repeat(arguments[0]);
+    };
+
+    p5.prototype.repeatAll = function(duration) {
+        for(var i = 0; i < _motions.length; i++)
+            if(!_motions[i]._hasController)
+                _motions[i].repeat(duration);
     };
 
     p5.prototype.reverse = function(motion) {
@@ -255,6 +283,12 @@
             arguments[0].reverse();
         else
             _current.reverse();
+    };
+
+    p5.prototype.reverseAll = function(duration) {
+        for(var i = 0; i < _motions.length; i++)
+            if(!_motions[i]._hasController)
+                _motions[i].reverse(duration);
     };
 
     p5.prototype.onStart = function(func) {

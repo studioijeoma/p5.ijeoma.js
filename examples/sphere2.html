@@ -1,0 +1,92 @@
+<head>
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    var size;
+    var rings
+
+    function setup() {
+        createCanvas(windowWidth, windowHeight)
+
+        size = 100;
+
+        gap = 10;
+        count = 20
+        a = 0;
+
+        rings = []
+
+        beginSequence();
+        for (var i = count; i > 0; i--) {
+            var j = i / count;
+            var f = sin(HALF_PI * j);
+            var c = 255 * j;
+
+            // var r = new Ring(0, i * gap, size, f, c, 255)
+            var r = new Ring(0, -height / 2, size, f, c, 255)
+            rings.push(r)
+
+            tween(r, 'y', i * gap, 5).add(r, 'alpha', 255)
+        }
+
+        relative()
+        for (var i = 0; i < count; i++) {
+            var j = i / count;
+            var f = sin(HALF_PI * j);
+
+            tween(rings[i], 'y', height, 5).add(rings[i],'alpha',0)
+        }
+        endSequence();
+        play();
+
+    }
+
+    function draw() {
+        background(0)
+        noFill();
+        // fill(255, 0, 0)
+
+        offset = gap * count
+
+        translate(width / 2, height / 2 - offset / 2)
+
+        for (var i = 0; i < rings.length; i++)
+            rings[i].draw()
+    }
+
+    Ring = function(x, y, size, scaleFactor, color, alpha) {
+        this.x = x;
+        this.y = y;
+        this.size = size;
+        this.scaleFactor = scaleFactor;
+        this.color = color;
+        this.alpha = alpha;
+
+        this.draw = function() {
+            push();
+            translate(this.x, this.y)
+            scale(this.scaleFactor * 5)
+            strokeWeight(1 - this.scaleFactor)
+            stroke(this.color, this.alpha)
+            ellipse(0, 0, this.size, this.size)
+            pop()
+        }
+
+        return this;
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+</head>
+
+<body>
+</body>

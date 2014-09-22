@@ -1,0 +1,82 @@
+<head>
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    var size; 
+
+    function setup() {
+        createCanvas(windowWidth, windowHeight)  
+
+        size = 100;
+
+        gap = 0;
+        count = 20
+        a = 0;
+
+        t = createTween(10*count)
+            // .add(this,'count',10)
+            .add(this,'gap',15)
+            .add(this,'size',60) 
+
+        s = beginSequence();
+        for (var i = 0; i < count; i++) {
+            tween(10).add('a',255) ;
+        }
+        endSequence();
+        
+        reverseAll();
+        repeatAll();
+        playAll();
+    }
+
+    function draw() {
+        background(0)
+        noFill();
+        // fill(255, 0, 0)
+
+        offset = gap*count
+        stroke(255)
+        text(s.getIndex(),25,25)
+        
+        translate(width / 2, height / 2-offset/2)
+        for (var i = 0; i < count; i++) {
+            var j = i/count;
+            var f = sin(PI*j);
+            var c= 255*j;
+            push();
+            translate(0,i*gap)
+            scale(f*5)
+            // strokeWeight(1-f)
+
+            noStroke()
+            if(i < s.getIndex())
+                stroke(c,255)
+            else if(i > s.getIndex())
+                stroke(c,0)
+            else 
+                stroke(c,a)
+            
+            ellipse(0, 0, size, size)
+            pop()
+        } 
+    }
+
+    // var contour = function(x,y,scal) {
+
+    // }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+</head>
+
+<body>
+</body>

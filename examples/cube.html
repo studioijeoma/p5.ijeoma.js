@@ -1,0 +1,61 @@
+<head>
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">   
+    var size;
+
+    function setup() {
+        createCanvas(windowWidth,windowHeight) 
+        angleMode(DEGREES)
+        size = 100;
+    }   
+
+    function draw() {
+        background(255)
+        noFill();
+        stroke(0) 
+        //front
+        // rect(0,size/2,size,size)
+        //back
+        // rect(size/2,0,size,size)
+        //
+        // fill(0)  
+
+        //left 
+        // shearY(-2600); 
+        // rect(0,size/2,size/2,size) 
+
+        //top
+        // shearX(-2600); 
+        // rect(size/2,0,size,size/2) 
+
+        //right
+        // shearY(-2600); 
+        // fill(0)
+        // rect(size,size+size/2,size/2,size) 
+
+        beginShape(quad);
+        stroke(255);
+        vertex(0,0)
+        vertex(size,0)
+        stroke(0);
+        vertex(size,size)
+        vertex(0,size)
+        endShape();
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+</head>
+
+<body>
+</body>
