@@ -8,16 +8,15 @@
     function setup() {
         createCanvas(windowWidth, windowHeight)  
 
-        size = 100;
+        size = windowHeight/8;
 
         gap = 0;
         count = 20
         a = 0;
 
-        t = createTween(10*count)
-            // .add(this,'count',10)
+        t = createTween(10*count) 
             .add(this,'gap',15)
-            .add(this,'size',60) 
+            .add(this,'size',windowHeight/5) 
 
         s = beginSequence();
         for (var i = 0; i < count; i++) {

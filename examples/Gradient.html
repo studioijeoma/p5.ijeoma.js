@@ -11,21 +11,21 @@ function setup() {
     c1 = color(255, 0, 0);
     c2 = color(255, 255, 0);
 
-    t = new MOTION.Tween(1)
+    t = new createTween(100)
         .add(this, "c1", randomColor())
         .add(this, "c2", randomColor())
         .easing(Sine.InOut)
-        // .relative()
+        .relative()
         .play()
         .onEnd(function() {
-            // t.get("c1").setEnd(randomColor());
-            // t.get("c2").setEnd(randomColor());  
-            // t.play();
+            t.get("c1").setEnd(randomColor());
+            t.get("c2").setEnd(randomColor());
+            t.play();
         });
 }
 
 function draw() {
-    background(255); 
+    background(255);
 
     for (var i = 0; i <= width; i++) {
         var j = map(i, 0, width, 0, 1);
@@ -35,11 +35,10 @@ function draw() {
     }
 
     var time = t.getTime() + " / " + t.getDuration();
-    console.log('asdfasd')
     noStroke();
     fill(255);
     text(time, width - textWidth(time) - 25, height - 25);
-} 
+}
 
 function mousePressed() {
     t.pause();
@@ -62,7 +61,7 @@ body {
     padding: 0;
     margin: 0;
 }
-</style> 
+</style>
 </head>
 
 <body>

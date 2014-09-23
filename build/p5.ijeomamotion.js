@@ -85,8 +85,8 @@
     p5.prototype.relative = function() {
         _valueMode = MOTION.RELATIVE;
 
-        // if (_current)
-        //     _current.setValueMode(_valueMode)
+        if (_current)
+            _current.setValueMode(_valueMode)
 
         return this;
     };
