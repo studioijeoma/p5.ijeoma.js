@@ -2,19 +2,19 @@
     <script language="javascript" src="p5.js"></script>
     <script language="javascript" src="ijeomamotion.js"></script>
     <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
-    <script language="javascript">   
+    <script language="javascript">
     var size;
 
     function setup() {
-        createCanvas(windowWidth,windowHeight) 
+        createCanvas(windowWidth, windowHeight)
         angleMode(DEGREES)
         size = 100;
-    }   
+    }
 
     function draw() {
         background(255)
         noFill();
-        stroke(0) 
+        stroke(0)
         //front
         // rect(0,size/2,size,size)
         //back
@@ -37,11 +37,11 @@
 
         beginShape(quad);
         stroke(255);
-        vertex(0,0)
-        vertex(size,0)
+        vertex(0, 0)
+        vertex(size, 0)
         stroke(0);
-        vertex(size,size)
-        vertex(0,size)
+        vertex(size, size)
+        vertex(0, size)
         endShape();
     }
 

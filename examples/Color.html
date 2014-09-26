@@ -1,50 +1,51 @@
-<script language="javascript" src="p5.js"></script>
-<script language="javascript" src="ijeomamotion.js"></script>
-<script language="javascript" src="../build/p5.ijeomamotion.js"></script>
-<script language="javascript">
-var c, t; 
+<head>
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    var c, t;
 
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    noStroke(); 
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+        noStroke();
 
-    c = randomColor();
-    t = new MOTION.Tween(100).add('c', randomColor())
-        .relative()
-        .play()
-        .onEnd(function(){
-            this.get('c').setEnd(randomColor())
-            this.play();
-        });
-}
- 
-function draw() { 
-    fill(c);
-    rect(0,0,width,height);
-}
+        c = randomColor();
+        t = new MOTION.Tween(100).add('c', randomColor())
+            .relative()
+            .play()
+            .onEnd(function() {
+                this.get('c').setEnd(randomColor())
+                this.play();
+            });
+    }
 
-function mousePressed() {
-    t.pause();
-}
+    function draw() {
+        fill(c);
+        rect(0, 0, width, height);
+    }
 
-function mouseDragged() {
-    t.seek(mouseX / width);
-}
+    function mousePressed() {
+        t.pause();
+    }
 
-function mouseReleased() {
-    t.resume();
-}
+    function mouseDragged() {
+        t.seek(mouseX / width);
+    }
 
-function randomColor() {
-    return color(random(255),random(255),random(255))
-}
-</script>
-<style>
-body {
-    padding: 0;
-    margin: 0;
-}
-</style> 
+    function mouseReleased() {
+        t.resume();
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
 </head>
 
 <body>

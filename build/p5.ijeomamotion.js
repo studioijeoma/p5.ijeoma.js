@@ -85,8 +85,8 @@
     p5.prototype.relative = function() {
         _valueMode = MOTION.RELATIVE;
 
-        if (_current)
-            _current.setValueMode(_valueMode)
+        // if (_current)
+        //     _current.setValueMode(_valueMode)
 
         return this;
     };
@@ -94,8 +94,14 @@
     p5.prototype.absolute = function() {
         _valueMode = MOTION.ABSOLUTE;
 
-        if (_current)
-            _current.setValueMode(_valueMode)
+        // if (_current)
+        //     _current.setValueMode(_valueMode)
+
+        return this;
+    };
+
+    p5.prototype.valueMode = function(mode) {
+        _valueMode = mode;
 
         return this;
     };

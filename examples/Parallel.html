@@ -8,14 +8,14 @@
 
     function setup() {
         createCanvas(windowWidth, windowHeight);
-        ellipseMode(CORNER); 
+        ellipseMode(CORNER);
 
         w = width / 2;
         x1 = 0;
-        x2 = height-w;
+        x2 = height - w;
 
         tp = beginParallel()
-        tween(this, "x1", height-w, 50);
+        tween(this, "x1", height - w, 50);
         tween(this, "x2", 0, 100);
         endParallel();
         reverse();

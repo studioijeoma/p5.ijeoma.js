@@ -6,54 +6,54 @@
     var size;
     var rings
 
-    function setup() {
-        createCanvas(windowWidth, windowHeight)
+        function setup() {
+            createCanvas(windowWidth, windowHeight)
 
-        size = 100;
+            size = 100;
 
-        gap = 10;
-        count = 20
-        a = 0;
+            gap = 10;
+            count = 20
+            a = 0;
 
-        rings = []
+            rings = []
 
-        beginSequence();
-        for (var i = count; i > 0; i--) {
-            var j = i / count;
-            var f = sin(HALF_PI * j);
-            var c = 255 * j;
+            beginSequence();
+            for (var i = count; i > 0; i--) {
+                var j = i / count;
+                var f = sin(HALF_PI * j);
+                var c = 255 * j;
 
-            // var r = new Ring(0, i * gap, size, f, c, 255)
-            var r = new Ring(0, -height / 2, size, f, c, 255)
-            rings.push(r)
+                // var r = new Ring(0, i * gap, size, f, c, 255)
+                var r = new Ring(0, -height / 2, size, f, c, 255)
+                rings.push(r)
 
-            tween(r, 'y', i * gap, 5).add(r, 'alpha', 255)
+                tween(r, 'y', i * gap, 5).add(r, 'alpha', 255)
+            }
+
+            relative()
+            for (var i = 0; i < count; i++) {
+                var j = i / count;
+                var f = sin(HALF_PI * j);
+
+                tween(rings[i], 'y', height, 5).add(rings[i], 'alpha', 0)
+            }
+            endSequence();
+            play();
+
         }
 
-        relative()
-        for (var i = 0; i < count; i++) {
-            var j = i / count;
-            var f = sin(HALF_PI * j);
+        function draw() {
+            background(0)
+            noFill();
+            // fill(255, 0, 0)
 
-            tween(rings[i], 'y', height, 5).add(rings[i],'alpha',0)
+            offset = gap * count
+
+            translate(width / 2, height / 2 - offset / 2)
+
+            for (var i = 0; i < rings.length; i++)
+                rings[i].draw()
         }
-        endSequence();
-        play();
-
-    }
-
-    function draw() {
-        background(0)
-        noFill();
-        // fill(255, 0, 0)
-
-        offset = gap * count
-
-        translate(width / 2, height / 2 - offset / 2)
-
-        for (var i = 0; i < rings.length; i++)
-            rings[i].draw()
-    }
 
     Ring = function(x, y, size, scaleFactor, color, alpha) {
         this.x = x;
