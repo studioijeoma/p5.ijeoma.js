@@ -1,0 +1,62 @@
+<head>
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    function setup() {
+        createCanvas(windowWidth, windowHeight)
+        angleMode(DEGREES)
+
+        boxC = randomColor()
+        boxR = 0
+
+        ballC = randomColor()
+        ballY = 0;
+        ballSize = 100;
+
+        s = beginSequence()
+        tween(this, 'ballY', height - ballSize / 2, 50, 0, Bounce.Out)
+        tween(this, 'boxR', -180, 50, 0, Bounce.Out)
+        endSequence();
+        // play();
+    }
+
+    function draw() {
+        background(255)
+        noFill();
+        stroke(0)
+
+        push()
+        translate(width / 2, height/2 )
+        rotate(45)
+        noFill()
+        strokeWeight(5)
+        stroke(ballC)
+        rectMode(CENTER)
+        rect(0,0, height, height);
+        pop()
+
+        // translate(width / 2, height/2 )
+
+
+translate(width/2, 200)
+// push()
+rotate(90)
+        rect(0,0,ballSize,ballSize)
+        // pop()
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+</head>
+
+<body>
+</body>

@@ -108,8 +108,8 @@
 
     _current = null;
 
-    p5.prototype.tween = function(object, property, end, duration, delay, easing) {
-        t = new MOTION.Tween(object, property, end, duration, delay, easing).setValueMode(_valueMode);
+    p5.prototype.tween = function(object, property, end, duration, delay, easing) { 
+        var t = new MOTION.Tween(object, property, end, duration, delay, easing).setValueMode(_valueMode);
 
         if (_currentEasing)
             t.easing(_currentEasing)
