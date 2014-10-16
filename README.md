@@ -1,6 +1,6 @@
 #p5.ijeomamotion.js
  
-A p5.js-style API for [ijeomamotion.js]((https://github.com/ekeneijeoma/p5.ijeomamotion.js), a JS library for creating animations.
+A p5.js-style API for [ijeomamotion.js](https://github.com/ekeneijeoma/p5.ijeomamotion.js), a JS library for creating animations.
 
 #Download  
 
