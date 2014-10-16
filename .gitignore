@@ -1,2 +1,7 @@
 node_modules
 *.DS_Store
+examples/disruption.html
+
+examples/faceoff1.html
+
+examples/disruption2.html
