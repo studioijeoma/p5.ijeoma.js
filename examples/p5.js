@@ -1,4 +1,4 @@
-/*! p5.js v0.3.8 September 25, 2014 */
+/*! p5.js v0.3.9 October 10, 2014 */
 var shim = function (require) {
     window.requestDraw = function () {
       return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
@@ -98,7 +98,7 @@ var core = function (require, shim, constants) {
       this._updateInterval = 0;
       this._isGlobal = false;
       this._loop = true;
-      this.styles = [];
+      this._styles = [];
       this._defaultCanvasSize = {
         width: 100,
         height: 100
@@ -597,6 +597,7 @@ var p5Graphics = function (require, core, constants) {
         this._pInst._setProperty('height', this.height);
       } else {
         this.canvas.style.display = 'none';
+        this._styles = [];
       }
     };
     p5.Graphics.prototype = Object.create(p5.Element.prototype);
@@ -609,9 +610,10 @@ var p5Graphics = function (require, core, constants) {
     p5.Graphics.prototype.resize = function (w, h) {
       this.width = w;
       this.height = h;
-      this.elt.setAttribute('width', w * this._pInst._pixelDensity);
-      this.elt.setAttribute('height', h * this._pInst._pixelDensity);
-      this.elt.setAttribute('style', 'width:' + w + 'px !important; height:' + h + 'px !important;');
+      this.elt.width = w * this._pInst._pixelDensity;
+      this.elt.height = h * this._pInst._pixelDensity;
+      this.elt.style.width = w + 'px';
+      this.elt.style.height = h + 'px';
       if (this._isMainCanvas) {
         this._pInst._setProperty('width', this.width);
         this._pInst._setProperty('height', this.height);
@@ -1795,6 +1797,26 @@ var colorsetting = function (require, core, constants, p5Color) {
     };
     return p5;
   }({}, core, constants, p5Color);
+var dataconversion = function (require, core) {
+    'use strict';
+    var p5 = core;
+    p5.prototype.float = function (str) {
+      return parseFloat(str);
+    };
+    p5.prototype.int = function (n, radix) {
+      if (typeof n === 'string') {
+        radix = radix | 10;
+        return parseInt(n, radix);
+      } else if (typeof n === 'number') {
+        return n | 0;
+      } else if (typeof n === 'boolean') {
+        return n ? 1 : 0;
+      } else if (n instanceof Array) {
+        return n.map(p5.prototype.int);
+      }
+    };
+    return p5;
+  }({}, core);
 var dataarray_functions = function (require, core) {
     'use strict';
     var p5 = core;
@@ -3969,6 +3991,7 @@ var renderingrendering = function (require, core, constants) {
       if (this._defaultGraphics) {
         this._defaultGraphics.resize(w, h);
         this._defaultGraphics._applyDefaults();
+        this.redraw();
       }
     };
     p5.prototype.noCanvas = function () {
@@ -3979,9 +4002,6 @@ var renderingrendering = function (require, core, constants) {
     };
     p5.prototype.createGraphics = function (w, h) {
       var c = document.createElement('canvas');
-      c.setAttribute('width', w * this._pixelDensity);
-      c.setAttribute('height', h * this._pixelDensity);
-      c.setAttribute('style', 'width:' + w + 'px !important; height:' + h + 'px !important;');
       var node = this._userNode || document.body;
       node.appendChild(c);
       var pg = new p5.Graphics(c, this, false);
@@ -3995,7 +4015,7 @@ var renderingrendering = function (require, core, constants) {
           }
         }
       }
-      pg.scale(this._pixelDensity, this._pixelDensity);
+      pg.resize(w, h);
       pg._applyDefaults();
       return pg;
     };
@@ -4424,7 +4444,7 @@ var structure = function (require, core) {
     };
     p5.prototype.push = function () {
       this.drawingContext.save();
-      this.styles.push({
+      this._styles.push({
         doStroke: this._doStroke,
         doFill: this._doFill,
         tint: this._tint,
@@ -4440,7 +4460,7 @@ var structure = function (require, core) {
     };
     p5.prototype.pop = function () {
       this.drawingContext.restore();
-      var lastS = this.styles.pop();
+      var lastS = this._styles.pop();
       this._doStroke = lastS.doStroke;
       this._doFill = lastS.doFill;
       this._tint = lastS.tint;
@@ -4682,7 +4702,7 @@ var typographyloading_displaying = function (require, core, canvas) {
     };
     return p5;
   }({}, core, canvas);
-var src_app = function (require, core, p5Color, p5Element, p5Graphics, p5Image, p5Vector, p5TableRow, p5Table, colorcreating_reading, colorsetting, constants, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying) {
+var src_app = function (require, core, p5Color, p5Element, p5Graphics, p5Image, p5Vector, p5TableRow, p5Table, colorcreating_reading, colorsetting, constants, dataconversion, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying) {
     'use strict';
     var p5 = core;
     var _globalInit = function () {
@@ -4699,4 +4719,4 @@ var src_app = function (require, core, p5Color, p5Element, p5Graphics, p5Image, 
     }
     window.p5 = p5;
     return p5;
-  }({}, core, p5Color, p5Element, p5Graphics, p5Image, p5Vector, p5TableRow, p5Table, colorcreating_reading, colorsetting, constants, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying);
+  }({}, core, p5Color, p5Element, p5Graphics, p5Image, p5Vector, p5TableRow, p5Table, colorcreating_reading, colorsetting, constants, dataconversion, dataarray_functions, datastring_functions, environment, imageimage, imageloading_displaying, imagepixels, inputfiles, inputkeyboard, inputmouse, inputtime_date, inputtouch, mathmath, mathcalculation, mathrandom, mathnoise, mathtrigonometry, outputfiles, outputimage, outputtext_area, renderingrendering, shape2d_primitives, shapeattributes, shapecurves, shapevertex, structure, transform, typographyattributes, typographyloading_displaying);
