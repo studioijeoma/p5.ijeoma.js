@@ -1,0 +1,44 @@
+<head>
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    var t;
+
+    function setup() {
+        createCanvas(windowWidth, windowHeight)
+        angleMode(DEGREES)
+
+        t = new MOTION.Transform(this);
+        
+        s = beginSequence()
+        tween(t, 'translate', createVector(width / 2, height / 2), 50)
+        tween(t, 'scale', 5, 50)
+        tween(t, 'rotate', 360, 50) 
+        endSequence();
+        s.play()
+    }
+
+    function draw() {
+        background(255);
+        noFill();
+        stroke(0);
+
+        push();
+        t.applyTranslate();
+        t.applyScale();
+        t.applyRotate();
+        rect(0, 0, 100, 100);
+        pop(); 
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+</head>
+
+<body>
+</body>

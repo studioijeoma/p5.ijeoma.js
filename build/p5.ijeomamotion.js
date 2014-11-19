@@ -12,26 +12,31 @@
 
     p5.prototype.createMotion = function(duration, delay, easing) {
         _current = new MOTION(duration, delay, easing);
+
         return _current;
     };
 
     p5.prototype.createTween = function(object, property, end, duration, delay, easing) {
         _current = new MOTION.Tween(object, property, end, duration, delay, easing);
+
         return _current;
     };
 
     p5.prototype.createParallel = function(children) {
         _current = new MOTION.Parallel(children);
+
         return _current;
     };
 
     p5.prototype.createSequence = function(children) {
         _current = new MOTION.Sequence(children);
+
         return _current;
     };
 
     p5.prototype.createTimeline = function(children) {
         _current = new MOTION.Timeline(children);
+
         return _current;
     };
 
@@ -53,6 +58,7 @@
 
     p5.prototype.timeMode = function(mode) {
         _timeMode = mode;
+
         return this;
     };
 
@@ -82,6 +88,12 @@
         return this;
     };
 
+    p5.prototype.valueMode = function(mode) {
+        _valueMode = mode;
+
+        return this;
+    };
+
     p5.prototype.relative = function() {
         _valueMode = MOTION.RELATIVE;
 
@@ -100,15 +112,9 @@
         return this;
     };
 
-    p5.prototype.valueMode = function(mode) {
-        _valueMode = mode;
-
-        return this;
-    };
-
     _current = null;
 
-    p5.prototype.tween = function(object, property, end, duration, delay, easing) { 
+    p5.prototype.tween = function(object, property, end, duration, delay, easing) {
         var t = new MOTION.Tween(object, property, end, duration, delay, easing).setValueMode(_valueMode);
 
         if (_currentEasing)
@@ -201,8 +207,8 @@
     };
 
     p5.prototype.playAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
                 _motions[i].play();
     };
 
@@ -216,8 +222,8 @@
     };
 
     p5.prototype.stopAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
                 _motions[i].stop();
     };
 
@@ -231,8 +237,8 @@
     };
 
     p5.prototype.pauseAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
                 _motions[i].pause();
     };
 
@@ -246,8 +252,8 @@
     };
 
     p5.prototype.resumeAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
                 _motions[i].resume();
     };
 
@@ -261,8 +267,8 @@
     };
 
     p5.prototype.seekAll = function(t) {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
                 _motions[i].seek(t);
     };
 
@@ -277,8 +283,8 @@
     };
 
     p5.prototype.repeatAll = function(duration) {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
                 _motions[i].repeat(duration);
     };
 
@@ -292,28 +298,32 @@
     };
 
     p5.prototype.reverseAll = function(duration) {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
                 _motions[i].reverse(duration);
     };
 
     p5.prototype.onStart = function(func) {
         _current.onStart(func);
+
         return this;
     };
 
     p5.prototype.onEnd = function(func) {
         _current.onEnd(func);
+
         return this;
     };
 
     p5.prototype.onUpdate = function(func) {
         _current.onUpdate(func);
+
         return this;
     };
 
     p5.prototype.onRepeat = function(func) {
         _current.onRepeat(func);
+
         return this;
     };
 
@@ -338,7 +348,7 @@
     };
 
     MOTION.ColorProperty.prototype = Object.create(MOTION.Property.prototype);
-    MOTION.ColorProperty.prototype.constrctor = MOTION.ColorProperty
+    MOTION.ColorProperty.prototype.constrctor = MOTION.ColorProperty;
 
     MOTION.ColorProperty.prototype.update = function(position) {
         this._position = position;
@@ -391,4 +401,29 @@
     };
 
     MOTION.Tween.prototype.add = MOTION.Tween.prototype.addProperty;
+
+    MOTION.Transform = function() {
+        this.rotate = 0;
+        this.scale = 1;
+        this.shearX = 0;
+        this.shearY = 0;
+        this.translate = createVector(0, 0);
+    }
+    MOTION.Transform.prototype.constrctor = MOTION.Transform;
+
+    MOTION.Transform.prototype.applyRotate = function() {
+        rotate(this.rotate)
+    }
+    MOTION.Transform.prototype.applyScale = function() {
+        scale(this.scale)
+    }
+    MOTION.Transform.prototype.applyShearX = function() {
+        shearX(this.shearX)
+    }
+    MOTION.Transform.prototype.applyShearY = function() {
+        shearY(this.shearY)
+    }
+    MOTION.Transform.prototype.applyTranslate = function() { 
+        translate(this.translate.x,this.translate.y)
+    }
 })(MOTION);
