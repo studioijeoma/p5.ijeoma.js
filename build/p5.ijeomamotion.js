@@ -4,11 +4,9 @@
     _timeMode = MOTION.FRAMES;
     _valueMode = MOTION.ABSOLUTE;
 
-    p5.prototype.registerMethod('pre', function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (_motions[i].isAutoUpdating() && !_motions[i]._hasController)
-                _motions[i].update();
-    });
+    _isAutoUpdating = true;
+
+    p5.prototype.registerMethod('pre', MOTION.update);
 
     p5.prototype.createMotion = function(duration, delay, easing) {
         _current = new MOTION(duration, delay, easing);
@@ -141,7 +139,7 @@
     };
 
     p5.prototype.endParallel = function() {
-        _current.updateTweens();
+        _current._updateTweens();
     };
 
     p5.prototype.beginSequence = function(name) {
@@ -154,7 +152,7 @@
     };
 
     p5.prototype.endSequence = function() {
-        _current.updateTweens();
+        _current._updateTweens();
     };
 
     p5.prototype.beginTimeline = function(name) {
@@ -167,7 +165,7 @@
     };
 
     p5.prototype.endTimeline = function() {
-        _current.updateTweens();
+        _current._updateTweens();
     };
 
     _currentKeyframe = null;
@@ -189,7 +187,7 @@
     };
 
     p5.prototype.endKeyframe = function() {
-        _currentKeyframe.updateTweens();
+        _currentKeyframe._updateTweens();
 
         if (_current.isTimeline())
             _current.add(_currentKeyframe);
@@ -206,11 +204,7 @@
             _current.play();
     };
 
-    p5.prototype.playAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].play();
-    };
+    p5.prototype.playAll = MOTION.playAll;
 
     p5.prototype.stop = function(motion) {
         if (typeof arguments[0] === 'string')
@@ -221,11 +215,7 @@
             _current.stop();
     };
 
-    p5.prototype.stopAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].stop();
-    };
+    p5.prototype.stopAll = MOTION.stopAll
 
     p5.prototype.pause = function(motion) {
         if (typeof arguments[0] === 'string')
@@ -236,11 +226,7 @@
             _current.pause();
     };
 
-    p5.prototype.pauseAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].pause();
-    };
+    p5.prototype.pauseAll = MOTION.pauseAll;
 
     p5.prototype.resume = function(motion) {
         if (typeof arguments[0] === 'string')
@@ -251,11 +237,7 @@
             _current.resume();
     };
 
-    p5.prototype.resumeAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].resume();
-    };
+    p5.prototype.resumeAll = MOTION.resumeAll;
 
     p5.prototype.seek = function(motion, t) {
         if (typeof arguments[0] === 'string')
@@ -266,12 +248,7 @@
             _current.seek(arguments[0]);
     };
 
-    p5.prototype.seekAll = function(t) {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].seek(t);
-    };
-
+    p5.prototype.seekAll = MOTION.seekAll;
 
     p5.prototype.repeat = function(motion, duration) {
         if (typeof arguments[0] === 'string')
@@ -327,20 +304,36 @@
         return this;
     };
 
+    MOTION.SECONDS = "seconds";
+    MOTION.FRAMES = "frames";
+
+    _timeMode = MOTION.SECONDS;
+
+    MOTION.prototype.update = function(time) {
+        _time = time !== 'undefined' ? time : (_timeMode == MOTION.SECONDS) ? millis() : frames();
+
+        for (var i = 0; i < _motions.length; i++)
+            if (_isAutoUpdating && !_motions[i]._hasController)
+                _motions[i]._update(_time);
+    };
+
     MOTION.prototype.resume = function() {
         this._isPlaying = true;
         this._isSeeking = false;
 
-        this._playTime = (_timeMode == MOTION.SECONDS) ? (millis() - this._playTime * 1000) : (frameCount - this._playTime);
+        this._playTime = (_timeMode == MOTION.SECONDS) ? (millis() - this._playTime / 1000) : (frameCount - this._playTime);
 
         return this;
     };
 
-    MOTION.prototype.updateTime = function() {
-        this._time = ((_timeMode == MOTION.SECONDS) ? ((millis() - this._playTime) / 1000) : (frameCount - this._playTime)) * this._timeScale;
+    MOTION.setTimeMode = function(timeMode) {
+        _timeMode = timeMode;
 
-        if (this._isReversing && this._reverseTime !== 0)
-            this._time = this._reverseTime - this._time;
+        return this;
+    };
+
+    MOTION.getTimeMode = function() {
+        return _timeMode;
     };
 
     MOTION.ColorProperty = function(object, field, end) {
@@ -423,7 +416,7 @@
     MOTION.Transform.prototype.applyShearY = function() {
         shearY(this.shearY)
     }
-    MOTION.Transform.prototype.applyTranslate = function() { 
-        translate(this.translate.x,this.translate.y)
+    MOTION.Transform.prototype.applyTranslate = function() {
+        translate(this.translate.x, this.translate.y)
     }
 })(MOTION);

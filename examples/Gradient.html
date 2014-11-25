@@ -1,6 +1,25 @@
 <head>
-    <script language="javascript" src="p5.js"></script>
-    <script language="javascript" src="ijeomamotion.js"></script>
+    <style>
+    body {
+        padding: 0;
+    }
+    canvas {
+        position: absolute;
+        top:0;
+        left:0;
+        z-index: -100
+    }
+    </style>
+</head>
+
+<body>
+    <button id="play">Play</button>
+    <button id="stop">Stop</button>
+    <button id="time"></button>
+    <button>Click and drag left to right to scrub</button>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
     <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
     <script language="javascript">
     var t;
@@ -12,12 +31,19 @@
         c1 = color(255, 0, 0);
         c2 = color(255, 255, 0);
 
-        t = new createTween(100)
+        time = document.getElementById('time')
+
+        console.log(c1)
+
+        t = new createTween(1000)
             .add(this, "c1", randomColor())
             .add(this, "c2", randomColor())
             .easing(Sine.InOut)
             .relative()
             .play()
+            .onUpdate(function() { 
+                time.innerHTML = this.getTime()|0;
+            })
             .onEnd(function() {
                 t.get("c1").setEnd(randomColor());
                 t.get("c2").setEnd(randomColor());
@@ -33,12 +59,7 @@
             var c = lerpColor(c1, c2, j);
             stroke(c);
             line(i, 0, i, height);
-        }
-
-        var time = t.getTime() + " / " + t.getDuration();
-        noStroke();
-        fill(255);
-        text(time, width - textWidth(time) - 25, height - 25);
+        }  
     }
 
     function mousePressed() {
@@ -57,13 +78,4 @@
         return color(random(255), random(255), random(255));
     }
     </script>
-    <style>
-    body {
-        padding: 0;
-        margin: 0;
-    }
-    </style>
-</head>
-
-<body>
 </body>
