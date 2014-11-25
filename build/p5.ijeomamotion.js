@@ -4,10 +4,11 @@
     _timeMode = MOTION.FRAMES;
     _valueMode = MOTION.ABSOLUTE;
 
+    _isAutoUpdating = true;
+
     p5.prototype.registerMethod('pre', function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (_motions[i].isAutoUpdating() && !_motions[i]._hasController)
-                _motions[i].update();
+        if (_isAutoUpdating)
+            MOTION.update();
     });
 
     p5.prototype.createMotion = function(duration, delay, easing) {
@@ -35,7 +36,7 @@
         return _current;
     };
 
-    var find = function() {
+    var _find = function() {
         if (typeof arguments[0] === 'string')
             for (var i = 0; i < _motions.length; i++)
                 if (_motions.getName() == arguments[0])
@@ -46,7 +47,7 @@
         if (typeof arguments[0] === 'number')
             _current = _motions[arguments[0]];
         else if (typeof arguments[0] === 'string')
-            _current = find(arguments[0]);
+            _current = _find(arguments[0]);
         else if (typeof arguments[0] === 'object')
             _current = arguments[0];
     };
@@ -129,7 +130,7 @@
     };
 
     p5.prototype.endParallel = function() {
-        _current.updateTweens();
+        _current._updateTweens();
     };
 
     p5.prototype.beginSequence = function(name) {
@@ -142,7 +143,7 @@
     };
 
     p5.prototype.endSequence = function() {
-        _current.updateTweens();
+        _current._updateTweens();
     };
 
     p5.prototype.beginTimeline = function(name) {
@@ -155,7 +156,7 @@
     };
 
     p5.prototype.endTimeline = function() {
-        _current.updateTweens();
+        _current._updateTweens();
     };
 
     _currentKeyframe = null;
@@ -177,7 +178,7 @@
     };
 
     p5.prototype.endKeyframe = function() {
-        _currentKeyframe.updateTweens();
+        _currentKeyframe._updateTweens();
 
         if (_current.isTimeline())
             _current.add(_currentKeyframe);
@@ -187,109 +188,81 @@
 
     p5.prototype.play = function(motion) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).play();
+            _find(arguments[0]).play();
         else if (typeof arguments[0] === 'object')
             arguments[0].play()
         else
             _current.play();
     };
 
-    p5.prototype.playAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
-                _motions[i].play();
-    };
+    p5.prototype.playAll = MOTION.playAll;
 
     p5.prototype.stop = function(motion) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).stop();
+            _find(arguments[0]).stop();
         else if (typeof arguments[0] === 'object')
             arguments[0].stop()
         else
             _current.stop();
     };
 
-    p5.prototype.stopAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
-                _motions[i].stop();
-    };
+    p5.prototype.stopAll = MOTION.stopAll;
 
     p5.prototype.pause = function(motion) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).pause();
+            _find(arguments[0]).pause();
         else if (typeof arguments[0] === 'object')
             arguments[0].pause()
         else
             _current.pause();
     };
 
-    p5.prototype.pauseAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
-                _motions[i].pause();
-    };
+    p5.prototype.pauseAll = MOTION.pauseAll;
 
     p5.prototype.resume = function(motion) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).resume();
+            _find(arguments[0]).resume();
         else if (typeof arguments[0] === 'object')
             arguments[0].resume()
         else
             _current.resume();
     };
 
-    p5.prototype.resumeAll = function() {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
-                _motions[i].resume();
-    };
+    p5.prototype.resumeAll = MOTION.resumeAll;
 
     p5.prototype.seek = function(motion, t) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).seek(arguments[1]);
+            _find(arguments[0]).seek(arguments[1]);
         else if (typeof arguments[0] === 'object')
             arguments[0].seek(arguments[1])
         else
             _current.seek(arguments[0]);
     };
 
-    p5.prototype.seekAll = function(t) {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
-                _motions[i].seek(t);
-    };
+    p5.prototype.seekAll = MOTION.seekAll;
 
 
     p5.prototype.repeat = function(motion, duration) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).repeat(arguments[1]);
+            _find(arguments[0]).repeat(arguments[1]);
         else if (typeof arguments[0] === 'object')
             arguments[0].repeat(arguments[1]);
         else
             _current.repeat(arguments[0]);
     };
 
-    p5.prototype.repeatAll = function(duration) {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
-                _motions[i].repeat(duration);
-    };
+    p5.prototype.repeatAll = MOTION.repeatAll;
 
     p5.prototype.reverse = function(motion) {
         if (typeof arguments[0] === 'string')
-            find(arguments[0]).reverse();
+            _find(arguments[0]).reverse();
         else if (typeof arguments[0] === 'object')
             arguments[0].reverse();
         else
             _current.reverse();
     };
 
-    p5.prototype.reverseAll = function(duration) {
-        for(var i = 0; i < _motions.length; i++)
-            if(!_motions[i]._hasController)
-                _motions[i].reverse(duration);
-    };
+    p5.prototype.reverseAll = MOTION.reverseAll;
 
     p5.prototype.onStart = function(func) {
         _current.onStart(func);
@@ -311,6 +284,14 @@
         return this;
     };
 
+    MOTION.update = function(time) {
+        _time = time !== undefined ? time : ((_timeMode == MOTION.SECONDS) ? millis() : frameCount);
+
+        for (var i = 0; i < _motions.length; i++)
+            if (!_motions[i]._hasController)
+                _motions[i]._update();
+    }
+
     MOTION.prototype.resume = function() {
         this._isPlaying = true;
         this._isSeeking = false;
@@ -318,13 +299,6 @@
         this._playTime = (_timeMode == MOTION.SECONDS) ? (millis() - this._playTime * 1000) : (frameCount - this._playTime);
 
         return this;
-    };
-
-    MOTION.prototype.updateTime = function() {
-        this._time = ((_timeMode == MOTION.SECONDS) ? ((millis() - this._playTime) / 1000) : (frameCount - this._playTime)) * this._timeScale;
-
-        if (this._isReversing && this._reverseTime !== 0)
-            this._time = this._reverseTime - this._time;
     };
 
     MOTION.ColorProperty = function(object, field, end) {
@@ -352,28 +326,25 @@
     };
 
     MOTION.Tween.prototype.addProperty = function(object, property, end) {
-        var p;
-
-        if (typeof arguments[0] == 'string') {
-            var v = this._object[arguments[0]];
-
-            if (typeof v == 'number')
-                p = new MOTION.NumberProperty(this._object, arguments[0], arguments[1]);
-            else if (v instanceof p5.Color)
-                p = new MOTION.ColorProperty(this._object, arguments[0], arguments[1]);
-            else if (v instanceof p5.Vector)
-                p = new MOTION.VectorProperty(this._object, arguments[0], arguments[1]);
-            else
-                console.warn('Only numbers, p5.colors and p5.vectors are supported.');
-        } else {
+        if (typeof arguments[0] == 'object') { 
             var v = object[property];
 
-            if (typeof v == 'number')
+            if (typeof v == 'number' || typeof v == 'undefined')
                 p = new MOTION.NumberProperty(object, property, end);
             else if (v instanceof p5.Color)
                 p = new MOTION.ColorProperty(object, property, end);
             else if (v instanceof p5.Vector)
                 p = new MOTION.VectorProperty(object, property, end);
+            else
+                console.warn('Only numbers, p5.colors and p5.vectors are supported.');
+        } else {
+            var v = window[arguments[0]]; 
+            if (typeof v == 'number' || typeof v == 'undefined')
+                p = new MOTION.NumberProperty(arguments[0], arguments[1]);
+            else if (v instanceof p5.Color)
+                p = new MOTION.ColorProperty(arguments[0], arguments[1]);
+            else if (v instanceof p5.Vector)
+                p = new MOTION.VectorProperty(arguments[0], arguments[1]);
             else
                 console.warn('Only numbers, p5.colors and p5.vectors are supported.');
         }

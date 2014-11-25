@@ -1,22 +1,36 @@
 <head>
-    <script language="javascript" src="p5.js"></script>
-    <script language="javascript" src="ijeomamotion.js"></script>
+    <style>
+    body {
+        padding: 0;
+    }
+    div {
+        z-index: -100
+    }
+    </style>
+</head>
+
+<body>
+    <button id="play">Play</button>
+    <button id="stop">Stop</button>
+    <button id="time"></button>
+    <button>Click and drag left to right to scrub</button>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
     <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
-    <script language="javascript">
+    <script language="javascript"> 
     var x1, x2, h;
     var tp;
 
-    function setup() {
+    function setup() { 
         createCanvas(windowWidth, windowHeight);
-        ellipseMode(CORNER); 
+        ellipseMode(CORNER);
 
-        w = width / 2;
-        x1 = 0;
-        x2 = height-w;
+        w = width / 2; 
 
         tp = beginParallel()
-        tween(this, "x1", height-w, 50);
-        tween(this, "x2", 0, 100);
+        tween("x1", [0, height - w], 5000);
+        tween("x2", [height - w, 0], 1000);
         endParallel();
         reverse();
         repeat();
@@ -66,15 +80,6 @@
         tp.seek(mouseX / width);
     }
     </script>
-    <style>
-    body {
-        padding: 0;
-        margin: 0;
-    }
-    </style>
-</head>
-
-<body>
 </body>
 
 </html>

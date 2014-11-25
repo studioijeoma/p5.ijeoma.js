@@ -1,0 +1,115 @@
+<head>
+    <script language="javascript" src="p5.js"></script>
+    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    var nodes = []
+    var tweens = []
+    var cols, rows;
+    var r = 10;
+
+
+    var s;
+    var es;
+
+    var p1,
+        p2,
+        p3,
+        p4,
+        p5;
+
+    function setup() {
+        createCanvas(720, 400);
+        noStroke();
+
+
+        s = 100;
+        es = 10;
+
+        p1 = createVector(0, 0)
+        p2 = createVector(s, 0)
+        p3 = createVector(s, s)
+        p4 = createVector(0, s)
+        p5 = createVector(s / 2, s / 2)
+    }
+
+    function draw() {
+        background(100);
+        angleMode(DEGREES)
+
+
+        fill(0)
+
+        translate(width/2,height/2)
+        // beginShape(TRIANGLES);
+        // vertex(0, s / 2);
+        // vertex(s, 0);
+        // vertex(s, s);
+        // vertex(0, s / 2);
+        // endShape();
+
+        push();
+        triangle(0, s / 2, s/2, 0, s/2, s);
+        pop();
+
+        push(); 
+        translate(s/2,s/2)
+        rotate(90)
+        triangle(0, s / 2, s/2, 0, s/2, s);
+        pop();
+
+        push(); 
+        translate(0,s)
+        rotate(180)
+        triangle(0, s / 2, s/2, 0, s/2, s);
+        pop();
+
+        push(); 
+        translate(-s/2,s/2)
+        rotate(270)
+        triangle(0, s / 2, s/2, 0, s/2, s);
+        pop();
+    }
+
+    var Node = function(p, c, s) {
+        return {
+            position: p,
+            color: c,
+            size: s,
+            draw: function() {
+                noStroke();
+                fill(this.color);
+                ellipse(this.position.x, this.position.y, this.size, this.size);
+            }
+        }
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255));
+    }
+
+    function mouseDragged() {
+        // t.seek(mouseX / width)
+    }
+
+    function keyTyped() {
+        // if (key == 'a')
+        //     t.pause();
+        // else if (key == 's')
+        //     t.resume();
+        // else if (key == 'd')
+        //     t.play();
+        // else if (key == 'f')
+        //     t.stop();
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+    }
+    </style>
+    <!-- this line removes any default padding -->
+</head>
+
+<body>
+</body>
