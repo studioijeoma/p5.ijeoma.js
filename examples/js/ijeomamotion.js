@@ -159,54 +159,26 @@ Bounce.InOut = function(t) {
     if (t < .5) return Bounce.In (t * 2, 0) * .5;
     return Bounce.Out(t * 2 - 1, 0) * .5 + .5;
 };(function(window, undefined) {
-    _ids = [];
-    _ids['Motion'] = 0;
-    _ids['Tween'] = 0;
-    _ids['Property'] = 0;
-    _ids['Parallel'] = 0;
-    _ids['Sequence'] = 0;
-    _ids['Timeline'] = 0;
-    _ids['KeyFrame'] = 0;
-
-    _motions = [];
-
-    _usePerformance = typeof window !== undefined && window.performance !== undefined && window.performance.now !== undefined;
-    _isAutoUpdating = false;
-    _time = 0;
-
     MOTION = function(duration, delay) {
-        if (this.isTween())
-            this._ids = 'Tween' + _ids['Tween']++;
-        else if (this.isParallel())
-            this._ids = 'Parallel' + _ids['Parallel']++;
-        else if (this.isSequence())
-            this._ids = 'Sequence' + _ids['Sequence']++;
-        else if (this.isTimeline())
-            this._ids = 'Timeline' + _ids['Timeline']++;
-        else
-            this._ids = 'Motion' + _ids['Motion']++;
- 
         this._name = '';
 
         this._playTime = 0;
-
         this._time = 0;
-        this._timeScale = 1;
-
-        this._reverseTime = 0;
-
-        this._duration = (typeof duration == 'undefined') ? 0 : duration;
-
-        this._delay = (typeof delay == 'undefined') ? 0 : delay;
+        this._duration = (typeof duration === 'undefined') ? 0 : duration;
+        this._delayTime = (typeof delay === 'undefined') ? 0 : delay;
 
         this._repeatTime = 0;
         this._repeatDuration = 0;
+
+        this._reverseTime = 0;
+
+        this._timeScale = 1;
 
         this._isPlaying = false;
         this._isRepeating = false;
         this._isRepeatingDelay = false;
         this._isReversing = false;
-        this._isSeeking = false; 
+        this._isSeeking = false;
 
         this._order = 0;
 
@@ -217,9 +189,7 @@ Bounce.InOut = function(t) {
         this._onUpdate = null;
         this._onRepeat = null;
 
-        this._valueMode = MOTION.ABSOLUTE;
-
-        _motions.push(this);
+        MOTION._add(this);
     };
 
     MOTION.REVISION = '1';
@@ -227,55 +197,61 @@ Bounce.InOut = function(t) {
     MOTION.RELATIVE = 'relative';
     MOTION.ABSOLUTE = 'absolute';
 
+    MOTION._motions = [];
+
+    MOTION._usePerformance = typeof window !== undefined && window.performance !== undefined && window.performance.now !== undefined;
+    MOTION._isAutoUpdating = false;
+    MOTION._time = 0;
+
     MOTION.playAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].play();
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i].play();
     };
 
     MOTION.stopAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].stop();
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i].stop();
     };
 
     MOTION.resumeAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].resume();
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i].resume();
     };
 
     MOTION.pauseAll = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].pause();
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i].pause();
     };
 
     MOTION.seekAll = function(t) {
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i].seek(t);
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i].seek(t);
+    };
+
+    MOTION.timeScaleAll = function(t) {
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i].timeScale(t);
+    };
+
+    MOTION._add = function(child) {
+        MOTION._motions.push(child);
     };
 
     MOTION.remove = function(child) {
-        var i = _motions.indexOf(child);
-        _motions.splice(i, 1);
+        var i = MOTION._motions.indexOf(child);
+        MOTION._motions.splice(i, 1);
     };
 
     MOTION.removeAll = function(child) {
-        _motions = [];
-        _motionsMap = [];
-
-        _ids = [];
+        MOTION._motions = [];
     };
 
     MOTION.update = function(time) {
-        _time = time !== undefined ? time : ((_usePerformance) ? window.performance.now() : Date.now());
+        MOTION._time = time !== undefined ? time : ((MOTION._usePerformance) ? window.performance.now() : Date.now());
 
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i]._update();
-    }
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i]._update();
+    };
 
     MOTION.autoUpdate = function() {
         _isAutoUpdating = true;
@@ -290,8 +266,8 @@ Bounce.InOut = function(t) {
     };
 
     MOTION.isPlaying = function() {
-        for (var i = 0; i < _motions.length; i++)
-            if (_motions[i].isPlaying())
+        for (var i = 0; i < MOTION._motions.length; i++)
+            if (MOTION._motions[i].isPlaying())
                 return true;
 
         return false;
@@ -331,8 +307,8 @@ Bounce.InOut = function(t) {
 
     MOTION.prototype.resume = function() {
         this._isPlaying = true;
- 
-        this._playTime = _time - this._playTime;
+
+        this._playTime = MOTION._time - this._playTime;
 
         return this;
     };
@@ -341,7 +317,7 @@ Bounce.InOut = function(t) {
         this._isPlaying = false;
         this._isSeeking = true;
 
-        this._playTime = (this._delay + this._duration) * value;
+        this._playTime = (this._delayTime + this._duration) * value;
 
         this.setTime(this._playTime);
 
@@ -387,7 +363,7 @@ Bounce.InOut = function(t) {
 
             this.dispatchChangedEvent();
 
-            if (!this.isInsidePlayingTime(this._time) && !this.isInsideDelayingTime(this._time)) {
+            if (!this._isInsidePlayingTime(this._time) && !this._isInsideDelayingTime(this._time)) {
                 this._reverseTime = (this._reverseTime === 0) ? this._duration : 0;
 
                 if (this._isRepeating && (this._repeatDuration === 0 || this._repeatTime < this._repeatDuration)) {
@@ -397,7 +373,7 @@ Bounce.InOut = function(t) {
                     this._repeatTime++;
 
                     if (!this._isRepeatingDelay)
-                        this._delay = 0;
+                        this._delayTime = 0;
 
                     this.dispatchRepeatedEvent();
                 } else this.stop();
@@ -405,8 +381,8 @@ Bounce.InOut = function(t) {
         }
     };
 
-    MOTION.prototype._updateTime = function() { 
-        this._time = _time - this._playTime;
+    MOTION.prototype._updateTime = function() {
+        this._time = (MOTION._time - this._playTime) * this._timeScale;
 
         if (this._isReversing && this._reverseTime !== 0)
             this._time = this._reverseTime - this._time;
@@ -422,8 +398,8 @@ Bounce.InOut = function(t) {
         return this._name;
     };
 
-    MOTION.prototype.setTime = function(time) { 
-        this._time = time;
+    MOTION.prototype.setTime = function(time) {
+        this._time = time * this._timeScale;
 
         if (this._isReversing && this._reverseTime !== 0) this._time = this._reverseTime - this._time;
 
@@ -431,24 +407,26 @@ Bounce.InOut = function(t) {
     };
 
     MOTION.prototype.getTime = function() {
-        return (this._time < this._delay) ? 0 : (this._time - this._delay);
+        return (this._time < this._delayTime) ? 0 : (this._time - this._delayTime);
     };
 
-    MOTION.prototype.setTimeScale = function(_timeScale) {
-        this._timeScale = _timeScale;
+    MOTION.prototype.setTimeScale = function(timeScale) {
+        this._timeScale = timeScale;
 
         return this;
     };
+
+    MOTION.prototype.timeScale = MOTION.prototype.setTimeScale;
 
     MOTION.prototype.getTimeScale = function() {
         return this._timeScale;
     };
 
     MOTION.prototype.getPosition = function() {
-        var t = this.getTime();
-
-        return (t > 0) ? t / this._duration : 0;
+        return this.getTime() / this._duration;
     };
+
+    MOTION.prototype.position = MOTION.prototype.getPosition;
 
     MOTION.prototype.setDuration = function(_duration) {
         this._duration = _duration;
@@ -467,7 +445,7 @@ Bounce.InOut = function(t) {
     };
 
     MOTION.prototype.setDelay = function(delay) {
-        this._delay = delay;
+        this._delayTime = delay;
 
         return this;
     };
@@ -475,13 +453,13 @@ Bounce.InOut = function(t) {
     MOTION.prototype.delay = MOTION.prototype.setDelay;
 
     MOTION.prototype.noDelay = function() {
-        this._delay = 0;
+        this._delayTime = 0;
 
         return this;
     };
 
     MOTION.prototype.getDelay = function() {
-        return this._delay;
+        return this._delayTime;
     };
 
     MOTION.prototype.repeatDelay = function(duration) {
@@ -516,48 +494,30 @@ Bounce.InOut = function(t) {
         return this;
     };
 
+    MOTION.prototype.valueMode = MOTION.prototype.setValueMode;
+
     MOTION.prototype.getValueMode = function() {
         return this._valueMode;
     };
 
     MOTION.prototype.isDelaying = function() {
-        return (this._time <= this._delay);
+        return (this._time <= this._delayTime);
     };
 
     MOTION.prototype.isPlaying = function() {
         return this._isPlaying;
     };
 
-    MOTION.prototype.isInsideDelayingTime = function(value) {
-        return (value >= 0 && value < this._delay);
+    MOTION.prototype._isInsideDelayingTime = function(value) {
+        return (value >= 0 && value < this._delayTime);
     };
 
-    MOTION.prototype.isInsidePlayingTime = function(value) {
-        return (value >= this._delay && value < this._delay + this._duration);
+    MOTION.prototype._isInsidePlayingTime = function(value) {
+        return (value >= this._delayTime && value < this._delayTime + this._duration);
     };
 
-    MOTION.prototype.isAbovePlayingTime = function(value) {
-        return value >= this._delay + this._duration;
-    };
-
-    MOTION.prototype.isTween = function() {
-        return this instanceof MOTION.Tween;
-    };
-
-    MOTION.prototype.isParallel = function() {
-        return this instanceof MOTION.Parallel;
-    };
-
-    MOTION.prototype.isSequence = function() {
-        return this instanceof MOTION.Sequence;
-    };
-
-    MOTION.prototype.isTimeline = function() {
-        return this instanceof MOTION.Timeline;
-    };
-
-    MOTION.prototype.isKeyframe = function() {
-        return this instanceof MOTION.Keyframe;
+    MOTION.prototype._isAbovePlayingTime = function(value) {
+        return value >= this._delayTime + this._duration;
     };
 
     MOTION.prototype.onStart = function(func) {
@@ -602,10 +562,28 @@ Bounce.InOut = function(t) {
     MOTION.prototype.dispatchRepeatedEvent = function() {
         if (this._onRepeat)
             this._onRepeat();
-    }; 
+    };
 
     window.MOTION = MOTION;
-})(window);(function(MOTION, undefined) {
+
+    if (typeof Object.create != 'function') {
+        Object.create = (function() {
+            var Object = function() {};
+            return function(prototype) {
+                if (arguments.length > 1) {
+                    throw Error('Second argument not supported');
+                }
+                if (typeof prototype != 'object') {
+                    throw TypeError('Argument must be an object');
+                }
+                Object.prototype = prototype;
+                var result = new Object();
+                Object.prototype = null;
+                return result;
+            };
+        })();
+    }
+})(window);;(function(MOTION, undefined) {
     MOTION.MotionController = function(motions) {
         MOTION.call(this);
 
@@ -632,19 +610,19 @@ Bounce.InOut = function(t) {
             var m = this._motions[i];
 
             if (this._isSeeking) {
-                if (m.isInsidePlayingTime(this.getTime()))
+                if (m._isInsidePlayingTime(this.getTime()))
                     m.seek(_map(this.getTime(), 0, m.getDelay() + m.getDuration(), 0, 1));
-                else if (m.isAbovePlayingTime(this.getTime()))
+                else if (m._isAbovePlayingTime(this.getTime()))
                     m.seek(1);
                 else
                     m.seek(0);
-            } else if (m.isInsidePlayingTime(this.getTime())) {
+            } else if (m._isInsidePlayingTime(this.getTime())) {
                 if (m.isPlaying())
                     m._update(this.getTime(), false);
                 else
                     m.play();
             } else if (m.isPlaying())
-            m.stop();
+                m.stop();
         }
     };
 
@@ -659,7 +637,7 @@ Bounce.InOut = function(t) {
             for (var j = 0; j < properties.length; j++) {
                 var p = properties[j];
 
-                var name = (this._valueMode == MOTION.RELATIVE) ? p.getField() : t._id + '.' + p.getField();
+                var name = (this._valueMode === MOTION.RELATIVE) ? p._field : t._id + '.' + p._field;
                 var order = 0;
 
                 if (name in orderMap) {
@@ -667,11 +645,11 @@ Bounce.InOut = function(t) {
                     order++;
 
                     var pp = ppropertyMap[name];
-                    p.setBegin(pp.getEnd());
+                    p.setStart(pp.getEnd());
                 } else
-                p.setBegin();
+                    p.setStart();
 
-                p.setOrder(order);
+                p._order = order;
 
                 orderMap[name] = order;
                 ppropertyMap[name] = p;
@@ -689,7 +667,7 @@ Bounce.InOut = function(t) {
     };
 
     MOTION.MotionController.prototype.get = function(name) {
-        if (typeof arguments[0] == 'number')
+        if (typeof arguments[0] === 'number')
             return this._motions[arguments[0]];
         return this._motions;
     };
@@ -716,9 +694,11 @@ Bounce.InOut = function(t) {
         motion.delay(time);
         motion._hasController = true;
 
-        this._motions.push(motion);
+        MOTION.remove(motion);
 
-        if (motion.isTween()) {
+        this._motions.push(motion);
+ 
+        if (motion instanceof MOTION.Tween) {
             this._tweens.push(motion);
             this._updateTweens();
         }
@@ -731,10 +711,10 @@ Bounce.InOut = function(t) {
     MOTION.MotionController.prototype.remove = function(motion) {
         var motion, i;
 
-        if (typeof arguments[0] == 'number') {
+        if (typeof arguments[0] === 'number') {
             i = arguments[0];
             motion = this._motions[i];
-        } else if (typeof arguments[0] == 'object') {
+        } else if (typeof arguments[0] === 'object') {
             motion = arguments[0];
             i = this._motions.indexOf(motion);
         }
@@ -742,7 +722,7 @@ Bounce.InOut = function(t) {
         if (i != -1)
             this._motions.splice(i, 1);
 
-        if (motion.isTween()) {
+        if (motion instanceof MOTION.Tween) {
             i = this._tweens.indexOf(motion);
             this._tweens.splice(i, 1);
 
@@ -772,7 +752,7 @@ Bounce.InOut = function(t) {
 
     MOTION.MotionController.prototype.dispatchChangedEvent = function() {
         this._updateMotions();
-        MOTION.prototype.dispatchChangedEvent.call(this)
+        MOTION.prototype.dispatchChangedEvent.call(this);
     };
 
     _map = function(n, start1, stop1, start2, stop2) {
@@ -791,13 +771,13 @@ Bounce.InOut = function(t) {
             var m = this._motions[i];
 
             if (this._isSeeking) {
-                if (m.isInsidePlayingTime(this.getTime()))
+                if (m._isInsidePlayingTime(this.getTime()))
                     m.seek(_map(this.getTime(), 0, m.getDelay() + m.getDuration(), 0, 1));
-                else if (m.isAbovePlayingTime(this.getTime()))
+                else if (m._isAbovePlayingTime(this.getTime()))
                     m.seek(1);
                 else
                     m.seek(0);
-            } else if (m.isInsidePlayingTime(this.getTime())) {
+            } else if (m._isInsidePlayingTime(this.getTime())) {
                 if (m.isPlaying())
                     m._update(this.getTime(), false);
                 else
@@ -806,56 +786,58 @@ Bounce.InOut = function(t) {
                 if (this._isReversing && i < this._motions.length - 1)
                     m.seek(1);
                 else
-                    for (var i = 0; i < _motions.length; i++)
-                        _motions[i].stop();
+                    for (var i = 0; i < this._motions.length; i++)
+                        this._motions[i].stop();
             }
         }
     };
-})(MOTION)
+})(MOTION);
 ;(function(MOTION, undefined) {
+    _propertyCount = 0;
+
     MOTION.Property = function(object, field, values) {
-        this._object = (typeof arguments[0] == 'object') ? object : window;
-        this._field = (typeof arguments[0] == 'object') ? field : arguments[0];
+        this._object = (typeof arguments[0] === 'object') ? object : window;
+        this._field = (typeof arguments[0] === 'object') ? field : arguments[0];
 
-        this._id = 'Property' + _ids['Property']++;
+        this._id = 'Property' + _propertyCount++;
 
-        var values = (typeof arguments[0] == 'object') ? values : arguments[1]
+        var values = (typeof arguments[0] === 'object') ? values : arguments[1];
 
-        this._begin = this._object[this._field] = (typeof values == 'number') ? ((typeof this._object[this._field] == 'undefined') ? 0 : this._object[this._field]) : values[0];
-        this._end = (typeof values == 'number') ? values : values[1];
+        this._start = this._object[this._field] = (values instanceof Array) ? values[0] : ((typeof this._object[this._field] == 'undefined') ? 0 : this._object[this._field]);
+        this._end = (values instanceof Array) ? values[1] : values;
 
         this._position = 0;
-    }
+
+        this._order = 0;
+    };
 
     MOTION.Property.prototype.update = function(position) {
         this._position = position;
 
         if ((this._position > 0 && this._position <= 1) || (this._position == 0 && this._order == 0)) {
-            this._object[this._field] = this._position * (this._end - this._begin) + this._begin;
+            this._object[this._field] = this._position * (this._end - this._start) + this._start;
         } else {
             // console.log(this._position);
         }
     };
 
-    MOTION.Property.prototype.getId = function() {
-        return this._id;  
+    MOTION.Property.prototype.getStart = function() {
+        return this._start;
     };
 
-    MOTION.Property.prototype.getBegin = function() {
-        return this._begin;
-    };
-
-    MOTION.Property.prototype.setBegin = function(begin) {
-        if (typeof begin === 'undefined') {
+    MOTION.Property.prototype.setStart = function(start) {
+        if (typeof start === 'undefined') {
             if (typeof this._object[this._field] === 'undefined')
-                this._begin = 0;
+                this._start = 0;
             else
-                this._begin = this._object[this._field];
+                this._start = this._object[this._field];
         } else
-            this._begin = begin;
+            this._start = start;
 
         return this;
     };
+
+    MOTION.Property.prototype.start = MOTION.Property.prototype.setStart;
 
     MOTION.Property.prototype.getEnd = function() {
         return this._end;
@@ -866,9 +848,13 @@ Bounce.InOut = function(t) {
         return this;
     };
 
+    MOTION.Property.prototype.end = MOTION.Property.prototype.setEnd;
+
     MOTION.Property.prototype.getPosition = function() {
-        return this._position
+        return this._position;
     };
+
+    MOTION.Property.prototype.position = MOTION.Property.prototype.getPosition;
 
     MOTION.Property.prototype.setPosition = function(position) {
         this._position = position;
@@ -880,30 +866,15 @@ Bounce.InOut = function(t) {
         return this._object[this._field];
     };
 
-    MOTION.Property.prototype.getObject = function() {
-        return this._object
-    };
-
-    MOTION.Property.prototype.getField = function() {
-        return this._field
-    };
-
-    MOTION.Property.prototype.setOrder = function(order) {
-        this._order = order
-        return this;
-    };
-
-    MOTION.Property.prototype.getOrder = function() {
-        return this._order
-    };
+    MOTION.Property.prototype.value = MOTION.Property.prototype.getValue;
 
     MOTION.NumberProperty = function(object, field, end) {
-        MOTION.Property.call(this, object, field, end)
+        MOTION.Property.call(this, object, field, end);
     };
 
     MOTION.NumberProperty.prototype = Object.create(MOTION.Property.prototype);
-    MOTION.NumberProperty.prototype.constrctor = MOTION.NumberProperty
-})(MOTION);(function(MOTION, undefined) {
+    MOTION.NumberProperty.prototype.constrctor = MOTION.NumberProperty;
+})(MOTION);;(function(MOTION, undefined) {
     MOTION.Sequence = function(children) {
         MOTION.MotionController.call(this, children);
 
@@ -937,7 +908,7 @@ Bounce.InOut = function(t) {
             for (var i = 0; i < this._motions.length; i++) {
                 var c = this._motions[i];
 
-                if (c.isInsidePlayingTime(this._time)) {
+                if (c._isInsidePlayingTime(this._time)) {
                     this._currentIndex = i;
                     this._current = c;
 
@@ -964,8 +935,51 @@ Bounce.InOut = function(t) {
     MOTION.Timeline.prototype = Object.create(MOTION.MotionController.prototype);
     MOTION.Timeline.prototype.constructor = MOTION.Timeline;
 
+
+    MOTION.Timeline.prototype.play = function(time) {
+        if (typeof arguments[0] == 'undefined') {
+            MOTION.MotionController.prototype.play.call(this);
+        } else if (typeof arguments[0] == 'number') {
+            this.seek(arguments[0] / this._duration);
+            this.resume();
+        }
+        // else if (typeof arguments[0] == 'string') {
+        //     var k = this.get(arguments[0]);
+
+        //     this.seek(k.getPlayTime() / this._duration);
+        //     this.resume();
+        // } 
+        else if (typeof arguments[0] == 'object') {
+            this.seek(arguments[0].getPlayTime() / this._duration);
+            this.resume();
+        }
+
+        return this;
+    };
+
+    MOTION.Timeline.prototype.stop = function(time) {
+        if (typeof arguments[0] == 'undefined')
+            MOTION.MotionController.prototype.stop.call(this);
+        else if (typeof arguments[0] == 'number') {
+            this.seek(arguments[0] / this._duration);
+            this.pause();
+        }
+        // else if (typeof arguments[0] == 'string') {
+        //     var k = this.get(arguments[0]);
+
+        //     this.seek(k.getPlayTime() / this._duration);
+        //     this.pause();
+        // } 
+        else if (typeof arguments[0] == 'object') {
+            this.seek(arguments[0].getPlayTime() / this._duration);
+            this.pause();
+        }
+
+        return this;
+    };
+
     MOTION.Timeline.prototype.add = function(motion, time) {
-        if (motion.isKeyframe()) {
+        if (motion instanceof MOTION.Keyframe) {
             if (typeof time == 'undefined')
                 this.insert(motion, motion.getDelay());
             else
@@ -1008,60 +1022,29 @@ Bounce.InOut = function(t) {
                 return current;
         }
     };
-
-    MOTION.Timeline.prototype.gotoAndPlay = function(time) {
-        if (typeof arguments[0] == 'number') {
-            this.seek(arguments[0] / this._duration);
-            this.resume();
-        }
-        // else if (typeof arguments[0] == 'string') {
-        //     var k = this.get(arguments[0]);
-
-        //     this.seek(k.getPlayTime() / this._duration);
-        //     this.resume();
-        // } 
-        else if (typeof arguments[0] == 'object') {
-            this.seek(arguments[0].getPlayTime() / this._duration);
-            this.resume();
-        }
-    };
-
-    MOTION.Timeline.prototype.gotoAndStop = function(time) {
-        if (typeof arguments[0] == 'number') {
-            this.seek(arguments[0] / this._duration);
-            this.pause();
-        }
-        // else if (typeof arguments[0] == 'string') {
-        //     var k = this.get(arguments[0]);
-
-        //     this.seek(k.getPlayTime() / this._duration);
-        //     this.pause();
-        // } 
-        else if (typeof arguments[0] == 'object') {
-            this.seek(arguments[0].getPlayTime() / this._duration);
-            this.pause();
-        }
-    };
 })(MOTION);(function(MOTION, undefined) { 
-        MOTION.Tween = function(object, property, end, duration, delay, easing) {  
-            this._properties = [];
-            this._propertyMap = [];
+    MOTION.Tween = function(object, property, end, duration, delay, easing) {
+        this._properties = [];
+        this._propertyMap = [];
 
-            if (typeof arguments[0] == 'object') {
-                MOTION.call(this, arguments[3], arguments[4]);
-                this.addProperty(arguments[0], arguments[1], arguments[2])
-                this.setEasing(arguments[5]);
-            } else if (typeof arguments[0] == 'string') {
-                MOTION.call(this, arguments[2], arguments[3]);
-                this.addProperty(arguments[0], arguments[1])
-                this.setEasing(arguments[4]);
-            }else  {
-                MOTION.call(this, arguments[0], arguments[1]); 
-                this.setEasing(arguments[2]);
-            } 
+        this._valueMode = MOTION.ABSOLUTE;
+
+        if (typeof arguments[0] === 'object') {
+            MOTION.call(this, arguments[3], arguments[4]);
+            this.addProperty(arguments[0], arguments[1], arguments[2]);
+            this.setEasing(arguments[5]);
+        } else if (typeof arguments[0] === 'string') {
+            MOTION.call(this, arguments[2], arguments[3]);
+            this.addProperty(arguments[0], arguments[1]);
+            this.setEasing(arguments[4]);
+        } else {
+            MOTION.call(this, arguments[0], arguments[1]);
+            this.setEasing(arguments[2]);
+        }
     };
 
-    MOTION.Tween.prototype = Object.create(MOTION.prototype); MOTION.Tween.prototype.constrctor = MOTION.Tween
+    MOTION.Tween.prototype = Object.create(MOTION.prototype);
+    MOTION.Tween.prototype.constrctor = MOTION.Tween;
 
     MOTION.Tween.prototype._updateProperties = function() {
         for (var i = 0; i < this._properties.length; i++)
@@ -1069,10 +1052,15 @@ Bounce.InOut = function(t) {
     };
 
     MOTION.Tween.prototype.addProperty = function(object, property, end) {
-        var p = (typeof arguments[0] == 'object') ? new MOTION.NumberProperty(object, property, end) : new MOTION.NumberProperty(arguments[0], arguments[1]);
- 
+        if (arguments[0] instanceof MOTION.Property)
+            p = arguments[0];
+        else if (typeof arguments[0] === 'object')
+            p = new MOTION.NumberProperty(object, property, end);
+        else
+            p = new MOTION.NumberProperty(arguments[0], arguments[1]);
+
         this._properties.push(p);
-        this._propertyMap[p.getField()] = p;
+        this._propertyMap[p._field] = p;
 
         return this;
     };
@@ -1083,13 +1071,13 @@ Bounce.InOut = function(t) {
     MOTION.Tween.prototype.remove = function(child) {
         var property, i;
 
-        if (typeof arguments[0] == 'number') {
+        if (typeof arguments[0] === 'number') {
             i = arguments[0];
             property = this._properties[i];
-        } else if (typeof arguments[0] == 'name') {
+        } else if (typeof arguments[0] === 'name') {
             property = this._propertyMap[arguments[0]];
             i = this._properties.indexOf(property);
-        } else if (typeof arguments[0] == 'object') {
+        } else if (typeof arguments[0] === 'object') {
             property = arguments[0];
             i = this._properties.indexOf(property);
         }
@@ -1104,9 +1092,9 @@ Bounce.InOut = function(t) {
     };
 
     MOTION.Tween.prototype.getProperty = function() {
-        if (typeof arguments[0] == 'string')
+        if (typeof arguments[0] === 'string')
             return this._propertyMap[arguments[0]];
-        else if (typeof arguments[0] == 'number')
+        else if (typeof arguments[0] === 'number')
             return this._properties[arguments[0]];
         else
             return this._properties;
@@ -1117,7 +1105,7 @@ Bounce.InOut = function(t) {
     MOTION.Tween.prototype.getCount = function() {
         return this._properties.length;
     };
- 
+
     MOTION.prototype.setEasing = function(easing) {
         this._easing = (typeof easing == 'undefined') ? (function(t) {
             return t;
@@ -1143,7 +1131,7 @@ Bounce.InOut = function(t) {
     MOTION.Tween.prototype.dispatchStartedEvent = function() {
         if (this._valueMode == MOTION.RELATIVE)
             for (var i = 0; i < this._properties.length; i++)
-                this._properties[i].setBegin();
+                this._properties[i].setStart();
 
         if (this._onStart)
             this._onStart(this._object);

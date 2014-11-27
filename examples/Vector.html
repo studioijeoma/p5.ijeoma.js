@@ -1,49 +1,75 @@
+<html>
+
 <head>
-    <script language="javascript" src="p5.js"></script>
-    <script language="javascript" src="ijeomamotion.js"></script>
-    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
-    <script language="javascript">
-    var v
-
-        function setup() {
-            createCanvas(windowWidth, windowHeight);
-            noStroke();
-
-            v = createVector(0, 0);
-            t = new MOTION.Tween(100).add('v', createVector(width, height)).play();
-        }
-
-        function draw() {
-            background(0);
-
-            t.update();
-
-            fill(255)
-            ellipse(v.x, v.y, 20, 20);
-        }
-
-        function mouseDragged() {
-            t.seek(mouseX / width)
-        }
-
-        function keyTyped() {
-            if (key == 'a')
-                t.pause();
-            else if (key == 's')
-                t.resume();
-            else if (key == 'd')
-                t.play();
-            else if (key == 'f')
-                t.stop();
-        }
-    </script>
     <style>
     body {
         padding: 0;
-        margin:0;
+    }
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -100
     }
     </style>
 </head>
 
 <body>
-</body>
+    <button id="three">Play</button>
+    <button id="stop">Stop</button>
+    <button id="time"></button>
+    <button>Click and drag left to right to scrub</button>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    var v
+
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+        noStroke();
+
+        v = createVector(0, 0);
+        tween = createTween(100).add('v', createVector(width, height));
+        play();
+    }
+
+    function draw() {
+        background(0); 
+
+        fill(255)
+        ellipse(v.x, v.y, 20, 20);
+
+        document.getElementById('time').innerHTML = tween.getTime() + " / " + tween.getDuration();
+    }
+
+    function mousePressed() {;
+        pause();
+    }
+
+    function mouseReleased() {
+        resume();
+    }
+
+    function mouseDragged() {
+        seek(norm(mouseX, 0, width));
+    }
+
+    document.getElementById('three').onclick = function() {
+        play(100);
+    }
+    document.getElementById('stop').onclick = function() {
+        stop();
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+    </head>
+
+    <body>
+    </body>

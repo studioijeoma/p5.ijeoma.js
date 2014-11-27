@@ -1,51 +1,62 @@
-<script language="javascript" src="p5.js"></script>
-<script language="javascript" src="ijeomamotion.js"></script>
-<script language="javascript" src="../build/p5.ijeomamotion.js"></script>
-<script language="javascript">
-var c, t; 
-
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-    noStroke(); 
-
-    c = randomColor();
-    t = new MOTION.Tween(100).add('c', randomColor())
-        .relative()
-        .play()
-        .onEnd(function(){
-            this.get('c').setEnd(randomColor())
-            this.play();
-        });
-}
- 
-function draw() { 
-    fill(c);
-    rect(0,0,width,height);
-}
-
-function mousePressed() {
-    t.pause();
-}
-
-function mouseDragged() {
-    t.seek(mouseX / width);
-}
-
-function mouseReleased() {
-    t.resume();
-}
-
-function randomColor() {
-    return color(random(255),random(255),random(255))
-}
-</script>
-<style>
-body {
-    padding: 0;
-    margin: 0;
-}
-</style> 
+<head>
+    <style>
+    body {
+        padding: 0;
+    }
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -100
+    }
+    </style>
 </head>
 
 <body>
+    <button id="three">Play</button>
+    <button id="stop">Stop</button>
+    <button id="time"></button>
+    <button>Click and drag left to right to scrub</button>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">  
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+        noStroke();
+
+        c = randomColor();
+        tween = new MOTION.Tween(100).add('c', randomColor())
+            .relative()
+            .play()
+            .onEnd(function() {
+                this.get('c').end(randomColor())
+                this.play();
+            });
+    }
+
+    function draw() {
+        fill(c);
+        rect(0, 0, width, height);
+
+        document.getElementById('time').innerHTML = tween.getTime() + " / " + tween.getDuration();
+    }
+
+    function mousePressed() {
+        pause();
+    }
+
+    function mouseDragged() {
+        seek(mouseX / width);
+    }
+
+    function mouseReleased() {
+        resume();
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
+    }
+    </script>
 </body>

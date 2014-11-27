@@ -1,68 +1,76 @@
-<script language="javascript" src="p5.js"></script>
-<script language="javascript" src="ijeomamotion.js"></script>
-<script language="javascript" src="../build/p5.ijeomamotion.js"></script>
-<script language="javascript">
-var t;
-var c1, c2;
-
-function setup() {
-    createCanvas(windowWidth, windowHeight);
-
-    c1 = color(255, 0, 0);
-    c2 = color(255, 255, 0);
-
-    t = new createTween(100)
-        .add(this, "c1", randomColor())
-        .add(this, "c2", randomColor())
-        .easing(Sine.InOut)
-        .relative()
-        .play()
-        .onEnd(function() {
-            t.get("c1").setEnd(randomColor());
-            t.get("c2").setEnd(randomColor());
-            t.play();
-        });
-}
-
-function draw() {
-    background(255);
-
-    for (var i = 0; i <= width; i++) {
-        var j = map(i, 0, width, 0, 1);
-        var c = lerpColor(c1, c2, j);
-        stroke(c);
-        line(i, 0, i, height);
+<head>
+    <style>
+    body {
+        padding: 0;
     }
-
-    var time = t.getTime() + " / " + t.getDuration();
-    noStroke();
-    fill(255);
-    text(time, width - textWidth(time) - 25, height - 25);
-}
-
-function mousePressed() {
-    t.pause();
-}
-
-function mouseDragged() {
-    t.seek(mouseX / width);
-}
-
-function mouseReleased() {
-    t.resume();
-}
-
-function randomColor() {
-    return color(random(255), random(255), random(255));
-}
-</script>
-<style>
-body {
-    padding: 0;
-    margin: 0;
-}
-</style>
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -100
+    }
+    </style>
 </head>
 
 <body>
+    <button id="play">Play</button>
+    <button id="stop">Stop</button>
+    <button id="time"></button>
+    <button>Click and drag left to right to scrub</button>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
+    <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
+    <script language="javascript">
+    var t;
+    var c1, c2;
+
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+
+        c1 = randomColor();
+        c2 = c1;
+
+        t = new createTween(50)
+            .add(this, "c1", randomColor())
+            .add(this, "c2", c1)
+            .easing(Quad.In)
+            .relative()
+            .play()
+            .onEnd(function() {  
+                t.get("c1").end(randomColor());
+                t.get("c2").end(c1);
+                t.play();
+            });
+    }
+
+    function draw() {
+        background(255); 
+
+        for (var i = 0; i <= width; i++) {
+            var j = map(i, 0, width, 0, 1);
+            var c = lerpColor(c1, c2, j);
+            stroke(c);
+            line(i, 0, i, height);
+        }
+
+        time.innerHTML = t.getTime(); 
+    }
+
+    function mousePressed() {
+        t.pause();
+    }
+
+    function mouseDragged() {
+        t.seek(mouseX / width);
+    }
+
+    function mouseReleased() {
+        t.resume();
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255));
+    }
+    </script>
 </body>

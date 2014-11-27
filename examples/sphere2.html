@@ -1,6 +1,25 @@
 <head>
-    <script language="javascript" src="p5.js"></script>
-    <script language="javascript" src="ijeomamotion.js"></script>
+    <style>
+    body {
+        padding: 0;
+    }
+    canvas {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: -100
+    }
+    </style>
+</head>
+
+<body>
+    <button id="three">Play</button>
+    <button id="stop">Stop</button>
+    <button id="time"></button>
+    <button>Click and drag left to right to scrub</button>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
     <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
     <script language="javascript">
     var size;
@@ -35,7 +54,7 @@
             var j = i / count;
             var f = sin(HALF_PI * j);
 
-            tween(rings[i], 'y', height, 5).add(rings[i],'alpha',0)
+            tween(rings[i], 'y', height, 5).add(rings[i], 'alpha', 0)
         }
         endSequence();
         play();
@@ -80,13 +99,4 @@
         return color(random(255), random(255), random(255))
     }
     </script>
-    <style>
-    body {
-        padding: 0;
-        margin: 0;
-    }
-    </style>
-</head>
-
-<body>
 </body>

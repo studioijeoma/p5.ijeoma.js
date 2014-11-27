@@ -1,14 +1,10 @@
 (function(MOTION, undefined) {
     REVISION = '1';
 
-    _timeMode = MOTION.FRAMES;
-    _valueMode = MOTION.ABSOLUTE;
-
-    _isAutoUpdating = true;
-
     p5.prototype.registerMethod('pre', function() {
-        if (_isAutoUpdating)
+        if (MOTION.isAutoUpdating) { 
             MOTION.update();
+        }
     });
 
     p5.prototype.createMotion = function(duration, delay, easing) {
@@ -53,18 +49,18 @@
     };
 
     p5.prototype.timeMode = function(mode) {
-        _timeMode = mode;
+        MOTION._timeMode = mode;
         return this;
     };
 
     p5.prototype.seconds = function() {
-        _timeMode = MOTION.SECONDS;
+        MOTION._timeMode = MOTION.SECONDS;
 
         return this;
     };
 
     p5.prototype.frames = function() {
-        _timeMode = MOTION.FRAMES;
+        MOTION._timeMode = MOTION.FRAMES;
 
         return this;
     };
@@ -82,6 +78,8 @@
 
         return this;
     };
+
+    _valueMode = null;
 
     p5.prototype.relative = function() {
         _valueMode = MOTION.RELATIVE;
@@ -110,7 +108,7 @@
             t.easing(_currentEasing)
 
         if (_current && !_current.isPlaying()) {
-            if (_current.isTimeline() && _currentKeyframe)
+            if (_current instanceof MOTION.Timeline && _currentKeyframe)
                 _currentKeyframe.add(t);
             else
                 _current.add(t);
@@ -180,7 +178,7 @@
     p5.prototype.endKeyframe = function() {
         _currentKeyframe._updateTweens();
 
-        if (_current.isTimeline())
+        if (_current instanceof MOTION.Timeline)
             _current.add(_currentKeyframe);
 
         _currentKeyframe = null;
@@ -241,7 +239,6 @@
 
     p5.prototype.seekAll = MOTION.seekAll;
 
-
     p5.prototype.repeat = function(motion, duration) {
         if (typeof arguments[0] === 'string')
             _find(arguments[0]).repeat(arguments[1]);
@@ -264,6 +261,17 @@
 
     p5.prototype.reverseAll = MOTION.reverseAll;
 
+    p5.prototype.timeScale = function(motion, t) {
+        if (typeof arguments[0] === 'string')
+            _find(arguments[0]).timeScale(arguments[1]);
+        else if (typeof arguments[0] === 'object')
+            arguments[0].timeScale(arguments[1])
+        else
+            _current.timeScale(arguments[0]);
+    };
+
+    p5.prototype.timeScaleAll = MOTION.seekAll;
+
     p5.prototype.onStart = function(func) {
         _current.onStart(func);
         return this;
@@ -284,22 +292,19 @@
         return this;
     };
 
+    MOTION.SECONDS = 'seconds';
+    MOTION.FRAMES = 'frames';
+
+    MOTION._timeMode = MOTION.FRAMES;
+
+    MOTION.isAutoUpdating = true;
+
     MOTION.update = function(time) {
-        _time = time !== undefined ? time : ((_timeMode == MOTION.SECONDS) ? millis() : frameCount);
+        MOTION._time = time !== undefined ? time : ((MOTION._timeMode == MOTION.SECONDS) ? millis() : frameCount);
 
-        for (var i = 0; i < _motions.length; i++)
-            if (!_motions[i]._hasController)
-                _motions[i]._update();
+        for (var i = 0; i < MOTION._motions.length; i++)
+            MOTION._motions[i]._update();
     }
-
-    MOTION.prototype.resume = function() {
-        this._isPlaying = true;
-        this._isSeeking = false;
-
-        this._playTime = (_timeMode == MOTION.SECONDS) ? (millis() - this._playTime * 1000) : (frameCount - this._playTime);
-
-        return this;
-    };
 
     MOTION.ColorProperty = function(object, field, end) {
         MOTION.Property.call(this, object, field, end);
@@ -310,7 +315,7 @@
 
     MOTION.ColorProperty.prototype.update = function(position) {
         this._position = position;
-        this._object[this._field] = lerpColor(this._begin, this._end, this._position);
+        this._object[this._field] = lerpColor(this._start, this._end, this._position);
     };
 
     MOTION.VectorProperty = function(object, field, end) {
@@ -322,11 +327,11 @@
 
     MOTION.VectorProperty.prototype.update = function(position) {
         this._position = position;
-        this._object[this._field] = p5.Vector.lerp(this._begin, this._end, this._position);
+        this._object[this._field] = p5.Vector.lerp(this._start, this._end, this._position);
     };
 
     MOTION.Tween.prototype.addProperty = function(object, property, end) {
-        if (typeof arguments[0] == 'object') { 
+        if (typeof arguments[0] == 'object') {
             var v = object[property];
 
             if (typeof v == 'number' || typeof v == 'undefined')
@@ -338,7 +343,7 @@
             else
                 console.warn('Only numbers, p5.colors and p5.vectors are supported.');
         } else {
-            var v = window[arguments[0]]; 
+            var v = window[arguments[0]];
             if (typeof v == 'number' || typeof v == 'undefined')
                 p = new MOTION.NumberProperty(arguments[0], arguments[1]);
             else if (v instanceof p5.Color)
@@ -350,7 +355,7 @@
         }
 
         this._properties.push(p);
-        this._propertyMap[p.getField()] = p;
+        this._propertyMap[p._field] = p;
 
         return this;
     };
