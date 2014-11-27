@@ -295,6 +295,9 @@
     MOTION.SECONDS = 'seconds';
     MOTION.FRAMES = 'frames';
 
+    p5.SECONDS = MOTION.SECONDS;
+    p5.FRAMES = MOTION.FRAMES;
+
     MOTION._timeMode = MOTION.FRAMES;
 
     MOTION.isAutoUpdating = true;
