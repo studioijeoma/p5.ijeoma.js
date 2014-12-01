@@ -1,10 +1,10 @@
 <head>
-    <script language="javascript" src="p5.js"></script>
-    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
     <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
     <script language="javascript">
     var x1, x2, h;
-    var tp;
+    var parallel;
 
     function setup() {
         createCanvas(windowWidth, windowHeight);
@@ -14,13 +14,11 @@
         x1 = 0;
         x2 = height - w;
 
-        tp = beginParallel()
+        parallel = beginParallel()
         tween(this, "x1", height - w, 50);
         tween(this, "x2", 0, 100);
         endParallel();
-        reverse();
-        repeat();
-        play();
+        parallel.reverse().repeat().play();
     }
 
     function draw() {
@@ -33,37 +31,37 @@
 
         var time;
 
-        time = tp.get(0).getTime() + " / " + tp.get(0).getDuration();
+        time = parallel.get(0).getTime() + " / " + parallel.get(0).getDuration();
 
         noStroke();
         fill(0);
         text(time, 25, 25 + 12);
 
-        time = tp.get(1).getTime() + " / " + tp.get(1).getDuration();
+        time = parallel.get(1).getTime() + " / " + parallel.get(1).getDuration();
 
         fill(0);
         text(time, w + 25, 25 + 12);
 
-        time = tp.getTime() + " / " + tp.getDuration();
+        time = parallel.getTime() + " / " + parallel.getDuration();
 
         fill(0);
         text(time, width - textWidth(time) - 25, height - 25);
     }
 
     function keyPressed() {
-        tp.play();
+        parallel.play();
     }
 
     function mousePressed() {
-        tp.pause();
+        parallel.pause();
     }
 
     function mouseReleased() {
-        tp.resume();
+        parallel.resume();
     }
 
     function mouseDragged() {
-        tp.seek(mouseX / width);
+        parallel.seek(mouseX / width);
     }
     </script>
     <style>

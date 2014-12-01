@@ -1,4 +1,4 @@
-/*! p5.js v0.3.9 October 10, 2014 */
+/*! p5.js v0.3.12 November 23, 2014 */
 var shim = function (require) {
     window.requestDraw = function () {
       return window.requestAnimationFrame || window.webkitRequestAnimationFrame || window.mozRequestAnimationFrame || window.oRequestAnimationFrame || window.msRequestAnimationFrame || function (callback, element) {
@@ -119,11 +119,20 @@ var core = function (require, shim, constants) {
         'touchend': null,
         'resize': null
       };
+      this._loadingScreenId = 'p5_loading';
       this._start = function () {
         if (this._userNode) {
           if (typeof this._userNode === 'string') {
             this._userNode = document.getElementById(this._userNode);
           }
+        }
+        this._loadingScreen = document.getElementById(this._loadingScreenId);
+        if (!this._loadingScreen) {
+          this._loadingScreen = document.createElement('loadingDiv');
+          this._loadingScreen.innerHTML = 'loading...';
+          this._loadingScreen.style.position = 'absolute';
+          var node = this._userNode || document.body;
+          node.appendChild(this._loadingScreen);
         }
         this.createCanvas(this._defaultCanvasSize.width, this._defaultCanvasSize.height, true);
         var userPreload = this.preload || window.preload;
@@ -171,6 +180,7 @@ var core = function (require, shim, constants) {
         this.canvas.style.visibility = '';
         this.canvas.className = this.canvas.className.replace('p5_hidden', '');
         this._setupDone = true;
+        this._loadingScreen.parentNode.removeChild(this._loadingScreen);
       }.bind(this);
       this._draw = function () {
         var userSetup = this.setup || window.setup;
@@ -539,39 +549,46 @@ var p5Element = function (require, core) {
         p = p.elt;
       }
       p.appendChild(this.elt);
+      return this;
     };
     p5.Element.prototype.id = function (id) {
       this.elt.id = id;
+      return this;
     };
     p5.Element.prototype.class = function (c) {
       this.elt.className += ' ' + c;
+      return this;
     };
     p5.Element.prototype.mousePressed = function (fxn) {
       attachListener('mousedown', fxn, this);
+      return this;
     };
     p5.Element.prototype.mouseWheel = function (fxn) {
       attachListener('mousewheel', fxn, this);
+      return this;
     };
     p5.Element.prototype.mouseReleased = function (fxn) {
       attachListener('mouseup', fxn, this);
+      return this;
     };
     p5.Element.prototype.mouseClicked = function (fxn) {
       attachListener('click', fxn, this);
+      return this;
     };
     p5.Element.prototype.mouseMoved = function (fxn) {
       attachListener('mousemove', fxn, this);
+      return this;
     };
     p5.Element.prototype.mouseOver = function (fxn) {
       attachListener('mouseover', fxn, this);
+      return this;
     };
     p5.Element.prototype.mouseOut = function (fxn) {
       attachListener('mouseout', fxn, this);
+      return this;
     };
     function attachListener(ev, fxn, ctx) {
-      var _this = ctx;
-      var f = function (e) {
-        fxn(e, _this);
-      };
+      var f = fxn.bind(ctx);
       ctx.elt.addEventListener(ev, f, false);
       ctx._events[ev] = f;
     }
@@ -617,8 +634,8 @@ var p5Graphics = function (require, core, constants) {
       if (this._isMainCanvas) {
         this._pInst._setProperty('width', this.width);
         this._pInst._setProperty('height', this.height);
-        this._pInst.scale(this._pInst._pixelDensity, this._pInst._pixelDensity);
       }
+      this.drawingContext.scale(this._pInst._pixelDensity, this._pInst._pixelDensity);
     };
     return p5.Graphics;
   }({}, core, constants);
@@ -1001,6 +1018,8 @@ var p5Image = function (require, core, filters) {
       p5.prototype.set.call(this, x, y, imgOrCol);
     };
     p5.Image.prototype.resize = function (width, height) {
+      width = width || this.canvas.width;
+      height = width || this.canvas.height;
       var tempCanvas = document.createElement('canvas');
       tempCanvas.width = width;
       tempCanvas.height = height;
@@ -1805,7 +1824,7 @@ var dataconversion = function (require, core) {
     };
     p5.prototype.int = function (n, radix) {
       if (typeof n === 'string') {
-        radix = radix | 10;
+        radix = radix || 10;
         return parseInt(n, radix);
       } else if (typeof n === 'number') {
         return n | 0;
@@ -2015,7 +2034,7 @@ var environment = function (require, core, constants) {
         C.WAIT
       ];
     p5.prototype._frameRate = 0;
-    p5.prototype._lastFrameTime = 0;
+    p5.prototype._lastFrameTime = new Date().getTime();
     p5.prototype._targetFrameRate = 60;
     p5.prototype.frameCount = 0;
     p5.prototype.focused = true;
@@ -2207,20 +2226,20 @@ var imageloading_displaying = function (require, core, filters, canvas, constant
           callback(pImg);
         }
       };
-      img.crossOrigin = 'Anonymous';
+      if (path.indexOf('data:image/') !== 0) {
+        img.crossOrigin = 'Anonymous';
+      }
       img.src = path;
       return pImg;
     };
     p5.prototype.image = function (img, x, y, width, height) {
-      var frame = img.canvas ? img.canvas : img.elt;
-      if (width === undefined) {
-        width = img.width;
-      }
-      if (height === undefined) {
-        height = img.height;
-      }
+      var frame = img.canvas || img.elt;
+      x = x || 0;
+      y = y || 0;
+      width = width || img.width;
+      height = height || img.height;
       var vals = canvas.modeAdjust(x, y, width, height, this._imageMode);
-      if (this._tint) {
+      if (this._tint && img.canvas) {
         this.drawingContext.drawImage(this._getTintedImageCanvas(img), vals.x, vals.y, vals.w, vals.h);
       } else {
         this.drawingContext.drawImage(frame, vals.x, vals.y, vals.w, vals.h);
@@ -2849,6 +2868,11 @@ var inputfiles = function (require, core, reqwest) {
     p5.prototype.loadJSON = function (path, callback) {
       var ret = [];
       var t = path.indexOf('http') === -1 ? 'json' : 'jsonp';
+      if (typeof arguments[2] === 'string') {
+        if (arguments[2] === 'jsonp' || arguments[2] === 'json') {
+          t = arguments[2];
+        }
+      }
       reqwest({
         url: path,
         type: t,
@@ -2858,7 +2882,7 @@ var inputfiles = function (require, core, reqwest) {
           ret[k] = resp[k];
         }
         if (typeof callback !== 'undefined') {
-          callback(ret);
+          callback(resp);
         }
       });
       return ret;
@@ -2991,7 +3015,10 @@ var inputkeyboard = function (require, core) {
       this._setProperty('key', key);
       var keyPressed = this.keyPressed || window.keyPressed;
       if (typeof keyPressed === 'function' && !e.charCode) {
-        keyPressed(e);
+        var executeDefault = keyPressed(e);
+        if (executeDefault === false) {
+          e.preventDefault();
+        }
       }
     };
     p5.prototype.onkeyup = function (e) {
@@ -3005,7 +3032,10 @@ var inputkeyboard = function (require, core) {
       this._setProperty('key', key);
       this._setProperty('keyCode', e.which);
       if (typeof keyReleased === 'function') {
-        keyReleased(e);
+        var executeDefault = keyReleased(e);
+        if (executeDefault === false) {
+          e.preventDefault();
+        }
       }
     };
     p5.prototype.onkeypress = function (e) {
@@ -3013,7 +3043,10 @@ var inputkeyboard = function (require, core) {
       this._setProperty('key', String.fromCharCode(e.which));
       var keyTyped = this.keyTyped || window.keyTyped;
       if (typeof keyTyped === 'function') {
-        keyTyped(e);
+        var executeDefault = keyTyped(e);
+        if (executeDefault === false) {
+          e.preventDefault();
+        }
       }
     };
     return p5;
@@ -3034,13 +3067,15 @@ var inputmouse = function (require, core, constants) {
     p5.prototype.mouseIsPressed = false;
     p5.prototype.isMousePressed = false;
     p5.prototype._updateMouseCoords = function (e) {
-      if (e.type === 'touchstart' || e.type === 'touchmove') {
+      if (e.type === 'touchstart' || e.type === 'touchmove' || e.type === 'touchend') {
         this._setProperty('mouseX', this.touchX);
         this._setProperty('mouseY', this.touchY);
       } else {
-        var mousePos = getMousePos(this._curElement.elt, e);
-        this._setProperty('mouseX', mousePos.x);
-        this._setProperty('mouseY', mousePos.y);
+        if (this._curElement !== null) {
+          var mousePos = getMousePos(this._curElement.elt, e);
+          this._setProperty('mouseX', mousePos.x);
+          this._setProperty('mouseY', mousePos.y);
+        }
       }
       this._setProperty('winMouseX', e.pageX);
       this._setProperty('winMouseY', e.pageY);
@@ -3103,6 +3138,7 @@ var inputmouse = function (require, core, constants) {
       this._setProperty('isMousePressed', true);
       this._setProperty('mouseIsPressed', true);
       this._setMouseButton(e);
+      this._updateMouseCoords(e);
       if (typeof context.mousePressed === 'function') {
         executeDefault = context.mousePressed(e);
         if (executeDefault === false) {
@@ -3189,18 +3225,19 @@ var inputtouch = function (require, core) {
     p5.prototype.ptouchY = 0;
     p5.prototype.touches = [];
     p5.prototype._updateTouchCoords = function (e) {
-      if (e.type === 'mousedown' || e.type === 'mousemove') {
+      if (e.type === 'mousedown' || e.type === 'mousemove' || e.type === 'mouseup') {
         this._setProperty('touchX', this.mouseX);
         this._setProperty('touchY', this.mouseY);
       } else {
-        this._setProperty('touchX', e.changedTouches[0].pageX);
-        this._setProperty('touchY', e.changedTouches[0].pageY);
+        var touchPos = getTouchPos(this._curElement.elt, e, 0);
+        this._setProperty('touchX', touchPos.x);
+        this._setProperty('touchY', touchPos.y);
         var touches = [];
         for (var i = 0; i < e.changedTouches.length; i++) {
-          var ct = e.changedTouches[i];
+          var pos = getTouchPos(this._curElement.elt, e, i);
           touches[i] = {
-            x: ct.pageX,
-            y: ct.pageY
+            x: pos.x,
+            y: pos.y
           };
         }
         this._setProperty('touches', touches);
@@ -3210,6 +3247,14 @@ var inputtouch = function (require, core) {
       this._setProperty('ptouchX', this.touchX);
       this._setProperty('ptouchY', this.touchY);
     };
+    function getTouchPos(canvas, e, i) {
+      i = i || 0;
+      var rect = canvas.getBoundingClientRect();
+      return {
+        x: e.changedTouches[i].pageX - rect.left,
+        y: e.changedTouches[i].pageY - rect.top
+      };
+    }
     p5.prototype.ontouchstart = function (e) {
       var context = this._isGlobal ? window : this;
       var executeDefault;
@@ -3244,6 +3289,7 @@ var inputtouch = function (require, core) {
       }
     };
     p5.prototype.ontouchend = function (e) {
+      this._updateTouchCoords(e);
       var context = this._isGlobal ? window : this;
       var executeDefault;
       if (typeof context.touchEnded === 'function') {
@@ -3995,9 +4041,8 @@ var renderingrendering = function (require, core, constants) {
       }
     };
     p5.prototype.noCanvas = function () {
-      var c = document.getElementById('defaultCanvas');
-      if (c) {
-        c.parentNode.removeChild(c);
+      if (this.canvas) {
+        this.canvas.parentNode.removeChild(this.canvas);
       }
     };
     p5.prototype.createGraphics = function (w, h) {
@@ -4068,6 +4113,8 @@ var shape2d_primitives = function (require, core, canvas, constants) {
       if (!this._doStroke && !this._doFill) {
         return;
       }
+      w = Math.abs(w);
+      h = Math.abs(h);
       var ctx = this.drawingContext;
       var vals = canvas.modeAdjust(x, y, w, h, this._ellipseMode);
       ctx.beginPath();

@@ -1,6 +1,6 @@
 <head>
-    <script language="javascript" src="p5.js"></script>
-    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
     <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
     <script language="javascript">
     var v
@@ -14,9 +14,7 @@
         }
 
         function draw() {
-            background(0);
-
-            t.update();
+            background(0); 
 
             fill(255)
             ellipse(v.x, v.y, 20, 20);

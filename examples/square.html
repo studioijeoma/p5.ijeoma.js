@@ -1,6 +1,6 @@
 <head>
-    <script language="javascript" src="p5.js"></script>
-    <script language="javascript" src="ijeomamotion.js"></script>
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeomamotion.js"></script>
     <script language="javascript" src="../build/p5.ijeomamotion.js"></script>
     <script language="javascript">
     // var angles = [30, 10];
@@ -41,14 +41,13 @@
         tween(this, 'sqPoint', sqPoints[0], 25)
         easing(Bounce.InOut);
         tween(this, 'sqScale', 3, 50).relative()
-        endSequence();
-        repeat();
-        onRepeat(function() {
+        endSequence();  
+        sqSequence.repeat().onRepeat(function() {
             bgColor = sqColor;
             sqColor = randomColor();
         })
-        play();
-
+        .play()
+        
         textAlign(CENTER)
         textSize(txSize);
 
@@ -62,11 +61,11 @@
         translate(width / 2 - sqSize / 2 * sqScale, height / 2 - sqSize / 2 * sqScale)
         scale(sqScale)
 
-        var j = sqSequence.getIndex();
+        var j = sqSequence.currentIndex();
 
         stroke(sqColor);
 
-        if (sqSequence.getTime() > 1)
+        if (sqSequence.time() > 1)
             if (j < 4) {
                 noFill();
                 beginShape();
