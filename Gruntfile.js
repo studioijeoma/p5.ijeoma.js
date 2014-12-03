@@ -7,14 +7,14 @@ module.exports = function(grunt) {
                 separator: ';',
             },
             dist: {
-                src: ['src/p5.ijeomamotion.js'],
-                dest: 'build/p5.ijeomamotion.js',
+                src: ['src/p5.ijeoma.js'],
+                dest: 'build/p5.ijeoma.js',
             },
         },
         uglify: {
             build: {
-                src: 'build/p5.ijeomamotion.js',
-                dest: 'build/p5.ijeomamotion.min.js'
+                src: 'build/p5.ijeoma.js',
+                dest: 'build/p5.ijeoma.min.js'
             }
         },
         watch: {
