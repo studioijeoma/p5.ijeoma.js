@@ -1,99 +1,97 @@
 #p5.ijeoma.js
  
-A p5.js-style API for [ijeoma.js](https://github.com/ekeneijeoma/p5.ijeoma.js), a JS library for creating animations. More documentation and examples can be found in the [ijeoma.js README](https://github.com/ekeneijeoma/p5.ijeoma.js).
-
+A p5.js addon [ijeoma.js](https://github.com/ekeneijeoma/p5.ijeoma.js), a JS library for creating animations. More documentation and examples can be found in the [ijeoma.js README](https://github.com/ekeneijeoma/p5.ijeoma.js).
 
 #Download   
 Developement: [p5.ijeoma.js](http://goo.gl/04mfZ7)
+
 Production: [p5.ijeoma.min.js](http://goo.gl/Aeb2UP)
 
 #Getting Started 
-##How to create Tweens
-
-###Numbers  
-There are 4 ways to setup Tweens.
-```javascript
-createTween(duration,delay,easing) //object defaults to window
-createTween(object, duration, delay, easing) 
-createTween(object, property, end, duration, delay, easing)
-createTween(property, end, duration, delay, easing) //object defaults to window
+###Creating tweens
+Tweening a variable named x from 0 to 1024 in 1000 millseconds. 
+```javascript 
+//createTween(object, property, end, duration, [delay], [easing])
+var x = 0;
+var tween = createTween(window, "x", 1024, 1000).play(); // if no object is passed it will default to window
+```
+or
+```javascript 
+//createTween(property, [start,end], duration, [delay], [easing])
+var tween = createTween("x", [0,1024],1000).play(); // object defaults to window and the variable x is defined in window with a starting value of 0
 ```
 
-Say you want to tween x from 0 to 100 in 100 frames. 
+Tweening multiple variables and object properties
 ```javascript
-var x = 0;
-var t = createTween(100).add("x", 100, 100).play();
+//createTween(duration, [delay], [easing])
+var tween = createTween(1000).add(window, "x", [0,1024]).add(window, "y", [0,768]).add(window, "size", [0,100]).play();
 ```
 or
 ```javascript
-var x = 0;
-var t = createTween(this,100).add("x", 100).play();
+//createTween(duration, [delay], [easing])
+var tween = createTween(1000).add("x", [0,1024]).add("y", [0,768]).add("size", [0,100]).play(); // object defaults to window
 ```
 
+You can also call play and stop on all motion objects using
+```javascript
+playAll()
+stopAll()
+```
+
+##Destroying tweens
+```javascript
+Motion.remove(motion)
+```
+
+If you're creating and playing a lot of tweens that you're only using once you should can call useOnce() which will automatically destroy them after. It's set to false by default.
+```javascript
+createTween(...)(...).useOnce();
 or
-```javascript
-var x = 0;
-var t = createTween(this, "x", 100, 100).play();
+//applies call to all tween instances
+useOnce();
 ```
 
-The 2nd way lets you chain/add more properties to the Tween. Say we want to tween a var x from 0 to 100 and var y from 0 to 100 in 100 frames.
-```javascript
-var t = createTween(this).add("x", 100).add("y", 100).play();
-```
- 
-###p5.Colors 
-Say we want to tween a color var c from black to white in 100 frames.
-```javascript
-var c = color(0);
-var t = createTween("c", color(255), 100).play();
-```
- 
-###p5.Vectors
-You can also tween PVectors. Say we want to tween PVectors `v1 = PVector(0,0)` and `v2 = PVector(0,0)` to `v1 = PVector(50, 50)` and `v2 = PVector(100, 100)`.
-```javascript
-var v = createVector(0,0);
-var t = createTween("v", createVector(100,100), 100).play();
-```
-
-###All in 1!
-You can also tween multiples properties of any type in 1 Tween.
-```javascript
-var t = createTween(100).add("x", 100).add("c", color(255)).add("v", createVector(100, 100)).play();
-```
-
-###Callbacks 
-```javascript
-t = createTween(100).onStart(func).onUpdate(func).onEnd(func).play(); 
-```
-
-##How to playback Tweens 
 ###Delaying
 ```javascript
-var t = createTween("w", width, 50, 50).play(); //delay for 50 frames
+var tween = createTween("w", 1024, 1000, 500).play(); //delay for 500 milliseconds
 ```
 or
 ```javascript
-var t = createTween(this,50,50).add("w", width).delay(50).play();
+var tween = createTween("w", 1024, 1000).delay(500).play();
 ```
 ###Pausing, Resuming  
 ```javascript  
 t.pause(); 
 t.resume(); 
-t.seek(time); 
+t.seek(position); 
+
+pauseAll();
+resumell();
+seekAll(position);
 ```
 ###Repeating
 ```javascript
-var t = createTween("w", width, 100).repeat().play();
+var tween = createTween(...).repeat().play();
+
+repeatAll([duration]);
 ```
 ###Reversing
 ```javascript 
-var t = createTween("w", width, 100).repeat().reverse().play();
+var tween = createTween(...).repeat().reverse().play();
+
+reverseAll();
 ```
 
-##How to playback tweens in parallel 
-```javascript
-//p5.js way
-timeMode(MOTION.FRAMES); //frames by default
+###Changing speed/timescale
+```javascript 
+var tween = createTween(...).timeScale(2) //plays back twice as fast
+
+timeScaleAll(time);
+``` 
+
+##Playing back tweens in parallel
+```javascript 
+timeMode(FRAMES); //frames by default
 p = beginParallel() // returns MOTION.Parallel() object
   tween(...) // same arguments and functions as createTween()
   tween(...)
@@ -102,9 +100,8 @@ p.play()
 //or play(p); 
 ```
 
-##How to playback tweens in a sequence
-```javascript
-//p5.js way
+##Playing back tweens in sequence
+```javascript 
 var s = beginSequence(); // returns MOTION.Sequence() object
   tween(...)
   tween(...)
@@ -112,7 +109,7 @@ endSequence()
 s.play();
 ```
 
-##How to playback tweens in a timeline
+##Playing back tweens in a timeline
 ```javascript 
 var t = beginTimeline(); // returns MOTION.Timeline() object
   beginKeyframe(100);
