@@ -1,8 +1,11 @@
 #p5.ijeoma.js
  
-A p5.js-style API for [ijeoma.js](https://github.com/ekeneijeoma/p5.ijeoma.js), a JS library for creating animations.
+A p5.js-style API for [ijeoma.js](https://github.com/ekeneijeoma/p5.ijeoma.js), a JS library for creating animations. More documentation and examples can be found in the [ijeoma.js README](https://github.com/ekeneijeoma/p5.ijeoma.js).
 
-#Download  
+
+#Download   
+Developement: [p5.ijeoma.js](http://goo.gl/04mfZ7)
+Production: [p5.ijeoma.min.js](http://goo.gl/Aeb2UP)
 
 #Getting Started 
 ##How to create Tweens
