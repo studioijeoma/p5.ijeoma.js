@@ -95,8 +95,7 @@
                 console.warn('Only numbers, p5.colors and p5.vectors are supported.');
         }
 
-        this._properties.push(p);
-        this._propertyMap[p._field] = p;
+        this._properties.push(p); 
 
         return this;
     };
