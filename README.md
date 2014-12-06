@@ -7,6 +7,8 @@ Developement: [p5.ijeoma.js](http://goo.gl/04mfZ7)
 
 Production: [p5.ijeoma.min.js](http://goo.gl/Aeb2UP)
 
+[ijeoma.js required](https://github.com/ekeneijeoma/ijeoma.js)
+
 #Getting Started 
 ###Creating tweens
 Tweening a variable named x from 0 to 1024 in 1000 millseconds. 
