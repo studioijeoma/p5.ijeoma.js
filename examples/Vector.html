@@ -5,35 +5,35 @@
     <script language="javascript">
     var v
 
-        function setup() {
-            createCanvas(windowWidth, windowHeight);
-            noStroke();
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+        noStroke();
 
-            v = createVector(0, 0);
-            t = new MOTION.Tween(100).add('v', createVector(width, height)).play();
-        }
+        v = createVector(0, 0);
+        t = new MOTION.Tween(100).add('v', createVector(width, height)).play();
+    }
 
-        function draw() {
-            background(0); 
+    function draw() {
+        background(0); 
 
-            fill(255)
-            ellipse(v.x, v.y, 20, 20);
-        }
+        fill(255)
+        ellipse(v.x, v.y, 20, 20);
+    }
 
-        function mouseDragged() {
-            t.seek(mouseX / width)
-        }
+    function mouseDragged() {
+        t.seek(mouseX / width)
+    }
 
-        function keyTyped() {
-            if (key == 'a')
-                t.pause();
-            else if (key == 's')
-                t.resume();
-            else if (key == 'd')
-                t.play();
-            else if (key == 'f')
-                t.stop();
-        }
+    function keyTyped() {
+        if (key == 'a')
+            t.pause();
+        else if (key == 's')
+            t.resume();
+        else if (key == 'd')
+            t.play();
+        else if (key == 'f')
+            t.stop();
+    }
     </script>
     <style>
     body {
