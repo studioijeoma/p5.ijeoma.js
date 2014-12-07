@@ -57,6 +57,9 @@
         s.repeat().onRepeat(function() {
             bgColor = sq.color;
             sq.color = randomColor();
+ 
+            if(this.repeatTime() == 10)
+                this.play()
         })
         .play()
         
