@@ -45,7 +45,7 @@ stopAll();
 Motion.remove(motion)
 ```
 
-If you're creating and playing a lot of tweens that you're only using once you should can call useOnce() which will automatically destroy them after. It's set to false by default.
+If you're creating and lot of tweens that you're only playing once you should call useOnce() which will automatically destroys them after. It's set to false by default.
 ```javascript
 createTween(...).useOnce();
 ```

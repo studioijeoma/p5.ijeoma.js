@@ -72,7 +72,10 @@
         if (arguments[0] instanceof MOTION.Property) {
             p = arguments[0];
         } else if (typeof arguments[0] == 'object') {
-            var v = object[property];
+            if(typeof object[property] !== 'undefined')
+                v = (object[property] instanceof Array) ? object[property][0] : object[property];
+            else
+                v = (end instanceof Array) ? end[0] : end; 
 
             if (typeof v == 'number')
                 p = new MOTION.NumberProperty(object, property, end);
@@ -82,8 +85,11 @@
                 p = new MOTION.VectorProperty(object, property, end);
             else
                 console.warn('Only numbers, p5.colors and p5.vectors are supported.');
-        } else {
-            var v = window[arguments[0]];
+        } else { 
+            if(typeof window[arguments[0]] !== 'undefined')
+                v = (window[arguments[0]] instanceof Array) ? window[arguments[0]][0] : window[arguments[0]];
+            else
+                v = (end instanceof Array) ? end[0] : end; 
 
             if (typeof v == 'number')
                 p = new MOTION.NumberProperty(window, arguments[0], arguments[1]);
