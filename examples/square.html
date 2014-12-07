@@ -15,8 +15,7 @@
     <div>
         <button id="play">Play</button>
         <button id="stop">Stop</button>
-        <button id="time"></button>
-        <button>Click and drag left to right to scrub</button>
+        <button id="time"></button> 
     </div>
 
     <script language="javascript" src="js/p5.js"></script>
@@ -57,7 +56,7 @@
         s.repeat().onRepeat(function() {
             bgColor = sq.color;
             sq.color = randomColor();
- 
+
             if(this.repeatTime() == 10)
                 this.play()
         })
@@ -104,6 +103,13 @@
 
     function randomColor() {
         return color(random(255), random(255), random(255))
+    }
+
+    document.getElementById('play').onclick = function() {
+        s.play();
+    }
+    document.getElementById('stop').onclick = function() {
+        s.stop();
     }
     </script>
 </body> 

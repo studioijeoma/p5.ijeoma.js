@@ -24,9 +24,6 @@
     <script language="javascript" src="js/ijeoma.js"></script>
     <script language="javascript" src="../build/p5.ijeoma.js"></script>
     <script language="javascript">
-    var t;
-    var c1, c2;
-
     function setup() {
         createCanvas(windowWidth, windowHeight);
 
@@ -72,6 +69,14 @@
 
     function mouseReleased() {
         t.resume();
+    }
+
+    document.getElementById('play').onclick = function() {
+        t.play();
+    }
+
+    document.getElementById('stop').onclick = function() {
+        t.stop();
     }
 
     function randomColor() {

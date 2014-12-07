@@ -83,6 +83,13 @@
         p.seek(mouseX / width);
     }
 
+    document.getElementById('play').onclick = function() {
+        p.play()
+    }
+    document.getElementById('stop').onclick = function() {
+        p.stop()
+    }
+
     function randomColor() {
         return color(random(255),random(255),random(255));
     }
