@@ -15,29 +15,29 @@ Tweening a variable named x from 0 to 1024 in 1000 millseconds.
 ```javascript 
 //createTween(object, property, end, duration, [delay], [easing])
 var x = 0;
-var tween = createTween(window, "x", 1024, 1000).play(); // if no object is passed it will default to window
+var t = createTween(window, "x", 1024, 1000).play(); // if no object is passed it will default to window
 ```
 or
 ```javascript 
 //createTween(property, [start,end], duration, [delay], [easing])
-var tween = createTween("x", [0,1024],1000).play(); // object defaults to window and the variable x is defined in window with a starting value of 0
+var t = createTween("x", [0,1024],1000).play(); // object defaults to window and the variable x is defined in window with a starting value of 0
 ```
 
 Tweening multiple variables and object properties
 ```javascript
 //createTween(duration, [delay], [easing])
-var tween = createTween(1000).add(window, "x", [0,1024]).add(window, "y", [0,768]).add(window, "size", [0,100]).play();
+var t = createTween(1000).add(window, "x", [0,1024]).add(window, "y", [0,768]).add(window, "size", [0,100]).play();
 ```
 or
 ```javascript
 //createTween(duration, [delay], [easing])
-var tween = createTween(1000).add("x", [0,1024]).add("y", [0,768]).add("size", [0,100]).play(); // object defaults to window
+var t = createTween(1000).add("x", [0,1024]).add("y", [0,768]).add("size", [0,100]).play(); // object defaults to window
 ```
 
 You can also call play and stop on all motion objects using
 ```javascript
-playAll()
-stopAll()
+playAll();
+stopAll();
 ```
 
 ##Destroying tweens
@@ -47,20 +47,23 @@ Motion.remove(motion)
 
 If you're creating and playing a lot of tweens that you're only using once you should can call useOnce() which will automatically destroy them after. It's set to false by default.
 ```javascript
-createTween(...)(...).useOnce();
+createTween(...).useOnce();
+```
 or
+```javascript
 //applies call to all tween instances
 useOnce();
 ```
 
 ###Delaying
 ```javascript
-var tween = createTween("w", 1024, 1000, 500).play(); //delay for 500 milliseconds
+var t = createTween("w", 1024, 1000, 500).play(); //delay for 500 milliseconds
 ```
 or
 ```javascript
-var tween = createTween("w", 1024, 1000).delay(500).play();
+var t = createTween("w", 1024, 1000).delay(500).play();
 ```
+
 ###Pausing, Resuming  
 ```javascript  
 t.pause(); 
@@ -71,22 +74,24 @@ pauseAll();
 resumell();
 seekAll(position);
 ```
+
 ###Repeating
 ```javascript
-var tween = createTween(...).repeat().play();
+var t = createTween(...).repeat().play();
 
 repeatAll([duration]);
 ```
+
 ###Reversing
 ```javascript 
-var tween = createTween(...).repeat().reverse().play();
+var t = createTween(...).repeat().reverse().play();
 
 reverseAll();
 ```
 
 ###Changing speed/timescale
 ```javascript 
-var tween = createTween(...).timeScale(2) //plays back twice as fast
+var t = createTween(...).timeScale(2) //plays back twice as fast
 
 timeScaleAll(time);
 ``` 
