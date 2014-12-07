@@ -2,13 +2,7 @@
     <script language="javascript" src="js/p5.js"></script>
     <script language="javascript" src="js/ijeoma.js"></script>
     <script language="javascript" src="../build/p5.ijeoma.js"></script>
-    <script language="javascript">
-    var c1, c2, c3;
-    var y1, y2, y3;
-    var w;
-
-    var timeline;
-
+    <script language="javascript"> 
     function setup() {
         createCanvas(windowWidth, windowHeight);
         smooth();
@@ -19,7 +13,7 @@
 
         var d = 25;
 
-        timeline = beginTimeline();
+        t = beginTimeline();
 
         beginKeyframe(0);
         tween(d).add("y1", height).add("c1", randomColor());
@@ -35,7 +29,7 @@
 
         endTimeline();
 
-        timeline.repeat().reverse().play();
+        t.repeat().reverse().play();
     }
 
     function draw() {
@@ -51,19 +45,19 @@
         fill(c3);
         rect(w * 4, y3, w, height);
 
-        var time = timeline.get(0).getTime() + " / " + timeline.get(0).getDuration();
-        fill((timeline.get(0).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
+        var time = t.get(0).getTime() + " / " + t.get(0).getDuration();
+        fill((t.get(0).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
         text(time, 25, height - 25);
 
-        time = timeline.get(1).getTime() + " / " + timeline.get(1).getDuration();
-        fill((timeline.get(1).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
+        time = t.get(1).getTime() + " / " + t.get(1).getDuration();
+        fill((t.get(1).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
         text(time, w * 2 + 25, height - 25);
 
-        time = timeline.get(2).getTime() + " / " + timeline.get(2).getDuration();
-        fill((timeline.get(2).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
+        time = t.get(2).getTime() + " / " + t.get(2).getDuration();
+        fill((t.get(2).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
         text(time, w * 4 + 25, height - 25);
 
-        time = timeline.getTime() + " / " + timeline.getDuration();
+        time = t.getTime() + " / " + t.getDuration();
         fill(0);
         text(time, width - textWidth(time) - 25, 25);
 
@@ -75,27 +69,27 @@
 
     function keyPressed() {
         if (key == '1')
-            timeline.gotoAndPlay(0);
+            t.gotoAndPlay(0);
         else if (key == '2')
-            timeline.gotoAndPlay(50);
+            t.gotoAndPlay(50);
         else if (key == '3')
-            timeline.gotoAndPlay(100);
+            t.gotoAndPlay(100);
         else
-            timeline.play();
+            t.play();
     }
 
     function mousePressed() {
-        // timeline.play();
-        timeline.pause();
+        // t.play();
+        t.pause();
     }
 
 
     function mouseReleased() {
-        timeline.resume();
+        t.resume();
     }
 
     function mouseDragged() {
-        timeline.seek(norm(mouseX, 0, width));
+        t.seek(norm(mouseX, 0, width));
     }
 
     function randomColor() {
