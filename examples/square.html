@@ -99,19 +99,7 @@
 
         document.getElementById('time').innerHTML = s.time() | 0;
     }
-
-    function mousePressed() {
-        s.pause();
-    }
-
-    function mouseDragged() {
-        s.seek(mouseX / width);
-    }
-
-    function mouseReleased() {
-        s.resume();
-    }
-
+    
     document.getElementById('play').onclick = function() {
         s.play();
     }
