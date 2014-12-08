@@ -45,15 +45,14 @@
         frames();
         s = beginSequence();
         easing(Quad.Out)
-        tween(sq, 'point', sq.points[1], 25)
-        relative();
+        tween(sq, 'point', sq.points[1], 25) 
         tween(sq, 'point', sq.points[2], 25)
         tween(sq, 'point', sq.points[3], 25)
         tween(sq, 'point', sq.points[0], 25)
         easing(Bounce.InOut);
-        tween(sq, 'scale', 3, 50).relative()
-        endSequence();  
-        s.repeat().onRepeat(function() {
+        tween(sq, 'scale', 4, 50);
+        endSequence(); 
+        s.repeat().onRepeat(function() { 
             bgColor = sq.color;
             sq.color = randomColor();
 
@@ -77,32 +76,40 @@
 
         var j = s.currentIndex();
 
-        stroke(sq.color);
+        stroke(sq.color); 
 
-        if (s.time() > 1)
-            if (j < 4) {
-                noFill();
-                beginShape();
-                for (var i = 0; i <= j; i++)
-                    vertex(sq.points[i].x, sq.points[i].y)
-                endShape();
+        beginShape();
+        for (var i = 0; i <= j; i++)
+            vertex(sq.points[i].x, sq.points[i].y)
 
-                line(sq.points[j].x, sq.points[j].y, sq.point.x, sq.point.y)
-            } else {
-                fill(sq.color);
-                rect(0, 0, sq.size, sq.size)
-            }
+        if(j > 0 &&  j <s.count() - 1){
+            noFill();
+            endShape();
+
+            line(sq.points[j].x, sq.points[j].y, sq.point.x, sq.point.y) 
+        }else{
+            fill(sq.color);
+            endShape(CLOSE);
+        } 
         pop();
 
         noStroke()
         fill(sq.color);
         text(s.repeatTime() + 1, width / 2, height / 2 + txSize / 3 );
 
-        document.getElementById('time').innerHTML = s.getTime() | 0;
+        document.getElementById('time').innerHTML = s.time() | 0;
     }
 
-    function randomColor() {
-        return color(random(255), random(255), random(255))
+    function mousePressed() {
+        s.pause();
+    }
+
+    function mouseDragged() {
+        s.seek(mouseX / width);
+    }
+
+    function mouseReleased() {
+        s.resume();
     }
 
     document.getElementById('play').onclick = function() {
@@ -110,6 +117,10 @@
     }
     document.getElementById('stop').onclick = function() {
         s.stop();
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
     }
     </script>
 </body> 

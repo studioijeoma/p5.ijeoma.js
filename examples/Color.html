@@ -12,7 +12,7 @@
             .relative()
             .play()
             .onEnd(function() {
-                this.get('c').setEnd(randomColor())
+                this.get('c').end(randomColor())
                 this.play();
             });
     }

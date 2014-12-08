@@ -665,6 +665,8 @@ Bounce.InOut = function(t) {
         return this._motions.length;
     };
 
+    MOTION.MotionController.prototype.count = MOTION.MotionController.prototype.getCount;
+
     MOTION.MotionController.prototype.setEasing = function(easing) {
         this._easing = (typeof easing == 'undefined') ? (function(t) {
             return t;
@@ -913,6 +915,13 @@ Bounce.InOut = function(t) {
 
     MOTION.Sequence.prototype.current = MOTION.Sequence.prototype.getCurrent;
 
+    MOTION.MotionController.prototype.dispatchStartedEvent = function() {
+        this._current = null;
+        this._currentIndex = 0;
+
+        MOTION.prototype.dispatchStartedEvent.call(this)
+    };
+
     MOTION.MotionController.prototype.dispatchChangedEvent = function() {
         this._updateMotions();
 
@@ -930,6 +939,13 @@ Bounce.InOut = function(t) {
         }
         
         MOTION.prototype.dispatchChangedEvent.call(this)
+    };
+
+    MOTION.MotionController.prototype.dispatchRepeatedEvent = function() {
+        this._current = null;
+        this._currentIndex = 0;
+
+        MOTION.prototype.dispatchRepeatedEvent.call(this)
     };
 })(MOTION);;(function(MOTION, undefined) {
     MOTION.Keyframe = function(time, motions) {
@@ -1104,6 +1120,8 @@ Bounce.InOut = function(t) {
     MOTION.Tween.prototype.getCount = function() {
         return this._properties.length;
     };
+
+    MOTION.Tween.prototype.count = MOTION.Tween.prototype.getCount;
 
     MOTION.Tween.prototype.setEasing = function(easing) {
         this._easing = (typeof easing == 'undefined') ? (function(t) {

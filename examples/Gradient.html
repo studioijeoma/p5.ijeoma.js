@@ -42,8 +42,8 @@
                 time.innerHTML = this.getTime()|0;
             })
             .onEnd(function() {
-                t.get("c1").setEnd(randomColor());
-                t.get("c2").setEnd(randomColor());
+                t.get("c1").end(randomColor());
+                t.get("c2").end(randomColor());
                 t.play();
             });
     }

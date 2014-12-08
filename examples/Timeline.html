@@ -45,19 +45,19 @@
         fill(c3);
         rect(w * 4, y3, w, height);
 
-        var time = t.get(0).getTime() + " / " + t.get(0).getDuration();
+        var time = t.get(0).time() + " / " + t.get(0).getDuration();
         fill((t.get(0).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
         text(time, 25, height - 25);
 
-        time = t.get(1).getTime() + " / " + t.get(1).getDuration();
+        time = t.get(1).time() + " / " + t.get(1).getDuration();
         fill((t.get(1).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
         text(time, w * 2 + 25, height - 25);
 
-        time = t.get(2).getTime() + " / " + t.get(2).getDuration();
+        time = t.get(2).time() + " / " + t.get(2).getDuration();
         fill((t.get(2).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
         text(time, w * 4 + 25, height - 25);
 
-        time = t.getTime() + " / " + t.getDuration();
+        time = t.time() + " / " + t.getDuration();
         fill(0);
         text(time, width - textWidth(time) - 25, 25);
 

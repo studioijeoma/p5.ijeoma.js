@@ -40,27 +40,27 @@
 
         fill(0);
 
-        var time = s.get(0).getTime() + " / " + s.get(0).getDuration();
+        var time = s.get(0).time() + " / " + s.get(0).getDuration();
         fill((s.get(0).isPlaying() ? color(0, 255, 0) : color(255, 0,
             0)));
         text(time, 10, 10 + 12);
 
-        time = s.get(1).getTime() + " / " + s.get(1).getDuration();
+        time = s.get(1).time() + " / " + s.get(1).getDuration();
         fill((s.get(1).isPlaying() ? color(0, 255, 0) : color(255, 0,
             0)));
         text(time, 10, h + 10 + 12);
 
-        time = s.get(2).getTime() + " / " + s.get(2).getDuration();
+        time = s.get(2).time() + " / " + s.get(2).getDuration();
         fill((s.get(2).isPlaying() ? color(0, 255, 0) : color(255, 0,
             0)));
         text(time, 10, h * 2 + 10 + 12);
 
-        time = s.get(3).getTime() + " / " + s.get(3).getDuration();
+        time = s.get(3).time() + " / " + s.get(3).getDuration();
         fill((s.get(3).isPlaying() ? color(0, 255, 0) : color(255, 0,
             0)));
         text(time, 10, h * 3 + 10 + 12);
 
-        time = s.getTime() + " / " + s.getDuration();
+        time = s.time() + " / " + s.getDuration();
         fill((s.isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
         text(time, width - textWidth(time) - 25, height - 25);
     }
