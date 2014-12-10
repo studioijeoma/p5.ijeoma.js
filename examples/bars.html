@@ -1,0 +1,87 @@
+<head>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    div {
+        position: absolute;
+        z-index: 100;
+        padding: 10px 0 0 10px;
+    }
+    </style>
+</head>
+
+<body>
+    <div> 
+        <button id="time"></button>
+        <button>Click and drag left to right to scrub</button>
+    </div>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeoma.js"></script>
+    <script language="javascript" src="../build/p5.ijeoma.js"></script>
+    <script language="javascript">
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+
+        barCount = 10;
+        barW = windowWidth / barCount;
+        bars = [];
+        barCScale = function(d) {
+            return map(d, windowHeight / 4, windowHeight, 0, 225);
+        }
+
+        for (var i = 0; i < barCount; i++)
+            bars.push({
+                'order': i,
+                'x': i * barW,
+                'height': 0
+            })
+ 
+        t = createTween(100)  
+            .easing(Quart.Out)
+
+        for (var i = 0; i < bars.length; i++)
+            t.add(bars[i], 'height', randomH());
+   
+        t.play().onEnd(function() {
+            var properties = this.get();
+
+            for(var i = 0; i < properties.length; i++)  
+                properties[i].end(randomH())
+
+
+            this.relative().play();
+        });
+    } 
+
+    function draw() {
+        background(255);
+
+        for (var i = 0; i < barCount; i++) {
+            noStroke();
+            fill(barCScale(bars[i].height))
+            rect(bars[i].x, windowHeight - bars[i].height, barW, bars[i].height);
+        }
+
+        document.getElementById('time').innerHTML = t.time(); 
+    }
+
+    function mousePressed() {
+        t.pause();
+    }
+
+    function mouseDragged() {
+        t.seek(mouseX / width);
+    }
+
+    function mouseReleased() {
+        t.resume();
+    } 
+
+    function randomH() {
+        return round(random(windowHeight / 4, windowHeight));
+    } 
+    </script>
+</body>
