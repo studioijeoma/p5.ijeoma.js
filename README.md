@@ -11,6 +11,7 @@ Production: [p5.ijeoma.min.js](http://goo.gl/Aeb2UP)
 
 #Examples  
 [Bar chart](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/barChart.html) 
+
 [Square](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/square.html) 
 
 #Getting Started 
