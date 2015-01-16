@@ -111,6 +111,7 @@ var t = createTween("w", 1024, 100).delay(500).play();
 ```javascript  
 t.pause(); 
 t.resume(); 
+//position is value between 0 and 1
 t.seek(position); 
 
 pauseAll();
