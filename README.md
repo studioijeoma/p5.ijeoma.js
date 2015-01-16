@@ -88,7 +88,7 @@ useOnce();
 ```
 
 ###Easing
-You can add easing to to Tweens using the Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back, Bounce classes. Each class has a In, Out, InOut function. 
+You can add easing to to Tweens using the Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back, Bounce classes. Each of them have In, Out, and InOut functions. 
 ```javascript
 var t = createTween("w", 1024, 100, 0,Quad.In).play(); 
 ```
@@ -114,6 +114,7 @@ t.resume();
 //position is value between 0 and 1
 t.seek(position); 
 
+//applies call to all MOTION instances
 pauseAll();
 resumell();
 seekAll(position);
