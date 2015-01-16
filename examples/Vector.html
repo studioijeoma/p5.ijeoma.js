@@ -10,14 +10,22 @@
         noStroke();
 
         v = createVector(0, 0);
-        t = new MOTION.Tween(100).add('v', createVector(width, height)).play();
+        t = new MOTION.Tween(25).add('v', randomVector())
+            .delay(10) 
+            .easing(Sine.InOut)
+            .relative()
+            .play()
+            .onEnd(function(){  
+                this.get(0).end(randomVector())
+                this.play();
+            });
     }
 
     function draw() {
         background(0); 
 
         fill(255)
-        ellipse(v.x, v.y, 20, 20);
+        ellipse(v.x, v.y, 100, 100);
     }
 
     function mouseDragged() {
@@ -33,6 +41,10 @@
             t.play();
         else if (key == 'f')
             t.stop();
+    }
+
+    function randomVector() {
+        return createVector(random(width), random(height));
     }
     </script>
     <style>

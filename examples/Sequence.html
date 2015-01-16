@@ -1,99 +1,84 @@
 <head>
-    <script language="javascript" src="js/p5.js"></script>
-    <script language="javascript" src="js/ijeoma.js"></script>
-    <script language="javascript" src="../build/p5.ijeoma.js"></script>
-    <script language="javascript">  
-    function setup() {
-        createCanvas(windowWidth, windowHeight);
-
-        h = height / 4;
-
-        c1 = randomColor(), c2 = randomColor(), c3 = randomColor(), c4 = randomColor();
-        x1 = x3 = -width;
-        x2 = x4 = width;
-
-        var d = 50;
-
-        s = beginSequence(); 
-        easing(Sine.Out)
-        tween(d).add("x1", width).add("c1", randomColor());
-        tween(d).add("x2", -width).add("c2", randomColor());
-        tween(d).add("x3", width).add("c3", randomColor());
-        tween(d).add("x4", -width).add("c4", randomColor());
-        endSequence();
-       s.reverse().repeat().play();
-    }
-
-    function draw() {
-        background(255);
-
-        noStroke();
-
-        fill(c1);
-        rect(x1, 0, width, h);
-        fill(c2);
-        rect(x2, h, width, h);
-        fill(c3);
-        rect(x3, h * 2, width, h);
-        fill(c4);
-        rect(x4, h * 3, width, h);
-
-        fill(0);
-
-        var time = s.get(0).time() + " / " + s.get(0).getDuration();
-        fill((s.get(0).isPlaying() ? color(0, 255, 0) : color(255, 0,
-            0)));
-        text(time, 10, 10 + 12);
-
-        time = s.get(1).time() + " / " + s.get(1).getDuration();
-        fill((s.get(1).isPlaying() ? color(0, 255, 0) : color(255, 0,
-            0)));
-        text(time, 10, h + 10 + 12);
-
-        time = s.get(2).time() + " / " + s.get(2).getDuration();
-        fill((s.get(2).isPlaying() ? color(0, 255, 0) : color(255, 0,
-            0)));
-        text(time, 10, h * 2 + 10 + 12);
-
-        time = s.get(3).time() + " / " + s.get(3).getDuration();
-        fill((s.get(3).isPlaying() ? color(0, 255, 0) : color(255, 0,
-            0)));
-        text(time, 10, h * 3 + 10 + 12);
-
-        time = s.time() + " / " + s.getDuration();
-        fill((s.isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
-        text(time, width - textWidth(time) - 25, height - 25);
-    }
-
-    function keyPressed() {
-        play();
-    }
-
-    function mousePressed() {
-        pause();
-    }
-
-    function mouseReleased() {
-        resume();
-    }
-
-    function mouseDragged() {
-        seek(mouseX / width);
-    }
-
-    function randomColor() {
-        return color(random(255), random(255), random(255));
-    }
-    </script>
     <style>
     body {
         padding: 0;
         margin: 0;
     }
+    div { 
+        position: absolute;
+        z-index: 100;
+        padding: 10px 0 0 10px; 
+    }
     </style>
 </head>
-
 <body>
+    <div>
+        <button id="play">Play</button>
+        <button id="stop">Stop</button>
+        <button id="time"></button>
+        <button>Click and drag left to right to scrub</button>
+    </div>
+ 
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeoma.js"></script>
+    <script language="javascript" src="../build/p5.ijeoma.js"></script>
+    <script language="javascript">  
+        function setup() {
+            createCanvas(windowWidth, windowHeight);
+
+            h = height / 4;
+
+            c1 = randomColor(), c2 = randomColor(), c3 = randomColor(), c4 = randomColor();
+            x1 = x3 = -width;
+            x2 = x4 = width;
+
+            var d = 50;
+
+            s = beginSequence(); 
+            easing(Sine.Out);
+            tween(d).add("x1", width).add("c1", randomColor());
+            tween(d).add("x2", -width).add("c2", randomColor());
+            tween(d).add("x3", width).add("c3", randomColor());
+            tween(d).add("x4", -width).add("c4", randomColor());
+            endSequence();
+           s.reverse().repeat().play();
+        }
+
+        function draw() {
+            background(255);
+
+            noStroke();
+
+            fill(c1);
+            rect(x1, 0, width, h);
+            fill(c2);
+            rect(x2, h, width, h);
+            fill(c3);
+            rect(x3, h * 2, width, h);
+            fill(c4);
+            rect(x4, h * 3, width, h); 
+        }
+
+        function keyPressed() {
+            play();
+        }
+
+        function mousePressed() {
+            pause();
+        }
+
+        function mouseReleased() {
+            resume();
+        }
+
+        function mouseDragged() {
+            seek(mouseX / width);
+        }
+
+        function randomColor() {
+            return color(random(255), random(255), random(255));
+        }
+    </script>  
 </body>
 
 </html>

@@ -1,11 +1,37 @@
 <head>
+   <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    #menu { 
+        position: absolute;
+        z-index: 100;
+        padding: 10px 0 0 10px; 
+    }
+    </style>
+</head>
+
+<body>
+    <div id="menu">
+        <button id="one">Play 1st keyframe</button>
+        <button id="two">Play 2nd keyframe</button>
+        <button id="three">Play 3rd keyframe</button>
+        <button id="four">Play 4th keyframe</button>
+        <button id="stop">Stop</button>
+        <button id="time"></button>
+        <button>Click and drag left to right to scrub</button>
+    </div>
+
     <script language="javascript" src="js/p5.js"></script>
     <script language="javascript" src="js/ijeoma.js"></script>
-    <script language="javascript" src="../build/p5.ijeoma.js"></script>
-    <script language="javascript"> 
+    <script language="javascript" src="../build/p5.ijeoma.js"></script> 
+    <script language="javascript">
     function setup() {
         createCanvas(windowWidth, windowHeight);
         smooth();
+
+        time = document.getElementById('time')
 
         c1 = randomColor(), c2 = randomColor(), c3 = randomColor();
         y1 = y2 = y3 = -height;
@@ -29,7 +55,9 @@
 
         endTimeline();
 
-        t.repeat().reverse().play();
+        t.repeat().reverse().play().onUpdate(function() {
+            time.innerHTML = this.getTime() | 0;
+        });
     }
 
     function draw() {
@@ -44,26 +72,6 @@
 
         fill(c3);
         rect(w * 4, y3, w, height);
-
-        var time = t.get(0).time() + " / " + t.get(0).getDuration();
-        fill((t.get(0).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
-        text(time, 25, height - 25);
-
-        time = t.get(1).time() + " / " + t.get(1).getDuration();
-        fill((t.get(1).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
-        text(time, w * 2 + 25, height - 25);
-
-        time = t.get(2).time() + " / " + t.get(2).getDuration();
-        fill((t.get(2).isPlaying() ? color(0, 255, 0) : color(255, 0, 0)));
-        text(time, w * 4 + 25, height - 25);
-
-        time = t.time() + " / " + t.getDuration();
-        fill(0);
-        text(time, width - textWidth(time) - 25, 25);
-
-        noStroke();
-        fill(0);
-        text('Drag left to right to scrub and press 1 - 3 to go to and play keyframes.', 25, 25);
     }
 
 
@@ -78,11 +86,9 @@
             t.play();
     }
 
-    function mousePressed() {
-        // t.play();
+    function mousePressed() { 
         t.pause();
-    }
-
+    } 
 
     function mouseReleased() {
         t.resume();
