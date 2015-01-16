@@ -30,6 +30,7 @@ timeMode(SECONDS);
 ###Creating tweens
 Tweening a variable named x from 0 to 1024 in 100 frames. 
 ```javascript  
+//NOTE: vars in brackets are optional
 //createTween(property, end, duration, [delay], [easing])
 var x = 0;
 var t = createTween("x", 1024, 100).play(); 
@@ -44,6 +45,7 @@ var t = createTween(window, "x", 1024, 100).play();
 ``` 
 or
 ```javascript 
+//NOTE: [start,end] is a required array
 //createTween(property, [start,end], duration, [delay], [easing])
 
  // object defaults to window and the variable x is defined in window with a starting value of 0
