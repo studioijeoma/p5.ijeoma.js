@@ -10,7 +10,7 @@ Production: [p5.ijeoma.min.js](http://goo.gl/Aeb2UP)
 [ijeoma.js required](https://github.com/ekeneijeoma/ijeoma.js)
 
 #Examples  
-[Tween Number](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Tween.html)
+<!-- [Tween Number](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Tween.html) -->
  
 [Tween Color](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Color.html)
 

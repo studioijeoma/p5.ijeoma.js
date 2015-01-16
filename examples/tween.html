@@ -1,0 +1,75 @@
+<head>
+   <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    #menu { 
+        position: absolute;
+        z-index: 100;
+        padding: 10px 0 0 10px; 
+    }
+    </style>
+</head>
+
+<body>
+    <div id="menu">
+        <button id="play">Play</button>
+        <button id="stop">Stop</button>
+        <button id="time"></button>
+        <button>Click and drag left to right to scrub</button>
+    </div>
+
+    <script language="javascript" src="js/p5.js"></script>
+    <script language="javascript" src="js/ijeoma.js"></script>
+    <script language="javascript" src="../build/p5.ijeoma.js"></script>
+    <script language="javascript">  
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
+        noStroke();
+
+        time = document.getElementById('time')
+
+        x =0;
+        c = randomColor();
+        t = createTween('x', [-width,width], 100) 
+            .absolute()
+            .onUpdate(function() { 
+                time.innerHTML = this.time() | 0;
+            }) 
+            .reverse()
+            .repeat()
+            .play()
+    }
+
+    function draw() {
+        fill(c);
+        rect(x, 0, width, height);
+    }
+
+    function mousePressed() {
+        t.pause();
+    }
+
+    function mouseDragged() {
+        t.seek(mouseX / width);
+    }
+
+    function mouseReleased() {
+        t.resume();
+    }
+
+    function randomColor() {
+        return color(random(255), random(255), random(255))
+    }
+    </script>
+    <style>
+    body {
+        padding: 0;
+        margin: 0;
+    }
+    </style>
+</head>
+
+<body>
+</body>
