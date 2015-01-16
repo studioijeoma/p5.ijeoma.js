@@ -11,22 +11,24 @@ Production: [p5.ijeoma.min.js](http://goo.gl/Aeb2UP)
 
 #Examples  
 <!-- [Tween Number](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Tween.html) -->
- 
+
 [Tween Color](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Color.html)
 
 [Tween Vector](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Vector.html)
 
 [Parallel](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Parallel.html)
- 
+
 [Sequence](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Sequence.html)
- 
+
 [Timeline](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Timeline.html)
- 
+
 
 [Transform](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/transform.html)
 
-[Gradients](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/gradient.html)
+[Gradients](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/Gradient.html)
+
 [Bar chart](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/barChart.html) 
+
 [Square](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/square.html) 
  
 
