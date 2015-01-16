@@ -52,6 +52,17 @@ or
 var t = createTween("x", [0,1024],100).play();
 ```
 
+Tweening using relative and absolute start and end values
+```javascript
+//tweens from defined start to end values every play
+valueMode(ABSOLUTE) 
+```
+or
+```javascript
+//tweens from defined start to end values on first play and from the property's value to a defined end value every play after
+valueMode(RELATIVE);
+```
+
 Tweening multiple variables and object properties
 ```javascript
 //createTween(duration, [delay], [easing])
