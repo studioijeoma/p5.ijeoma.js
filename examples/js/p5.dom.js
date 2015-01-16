@@ -1,4 +1,4 @@
-/*! p5.dom.js v0.1.7 November 23, 2014 */
+/*! p5.dom.js v0.1.9 December 10, 2014 */
 /**
  * <p>The web is much more than just canvas and p5.dom makes it easy to interact 
  * with other HTML5 objects, including text, hyperlink, image, input, video, 
@@ -63,7 +63,7 @@ var p5DOM = (function(){
     var res = document.getElementsByClassName(e);
     if (res) {
       for (var j = 0; j < res.length; j++) {
-        var obj = wrapElement(res);
+        var obj = wrapElement(res[j]);
         arr.push(obj);
       }
     }
@@ -371,19 +371,36 @@ var p5DOM = (function(){
    *                             AUDIO if none specified, default both
    * @return {Object/p5.Element} capture video p5.Element
    */
-  p5.prototype.createCapture = function(type) {
+  p5.prototype.createCapture = function() {
     var useVideo, useAudio;
-    if (!type) {
-      useVideo = true;
-      useAudio = true;
-    } else if (type === p5.prototype.VIDEO) {
+    var type = arguments[0];
+    if (type === p5.prototype.VIDEO) {
       useVideo = true;
     } else if (type === p5.prototype.AUDIO) {
       useAudio = true;
+    } else {
+      useVideo = true;
+      useAudio = true;
+    }
+
+    var fps;
+    if (typeof arguments[0] === 'number') {
+      fps = arguments[0];
+    } else if (arguments.length == 2 && typeof arguments[1] === 'number') {
+      fps = arguments[1];
     }
 
     if (navigator.getUserMedia) {
       var elt = document.createElement('video');
+
+      var constraints;
+      // if (fps) {
+      //   constraints = { mandatory: { minFrameRate: 1, maxFrameRate: fps } };
+      // }
+
+      useVideo = constraints || useVideo;
+      console.log(useVideo)
+
       navigator.getUserMedia({video: useVideo, audio: useAudio}, function(stream) {
         elt.src = window.URL.createObjectURL(stream);
         elt.play();
@@ -870,7 +887,7 @@ var p5DOM = (function(){
         this.canvas.height = this.height;
         this.drawingContext = this.canvas.getContext('2d');
       }
-      this.drawingContext.drawImage(this.elt, 0, 0);
+      this.drawingContext.drawImage(this.elt, 0, 0, this.width, this.height);
       p5.prototype.loadPixels.call(this);
     }
     return this;

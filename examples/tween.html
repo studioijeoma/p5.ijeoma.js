@@ -24,18 +24,18 @@
     <script language="javascript" src="js/ijeoma.js"></script>
     <script language="javascript" src="../build/p5.ijeoma.js"></script>
     <script language="javascript">  
+    var tx
     function setup() {
         createCanvas(windowWidth, windowHeight);
         noStroke();
 
         time = document.getElementById('time')
 
-        x =0;
+        tx =-width; 
         c = randomColor();
-        t = createTween('x', [-width,width], 100) 
-            .absolute()
+        t = createTween('tx',width, 25) 
             .onUpdate(function() { 
-                time.innerHTML = this.time() | 0;
+                time.innerHTML = tx | 0;
             }) 
             .reverse()
             .repeat()
@@ -44,7 +44,7 @@
 
     function draw() {
         fill(c);
-        rect(x, 0, width, height);
+        rect(tx, 0, width, height);
     }
 
     function mousePressed() {
