@@ -28,11 +28,11 @@ timeMode(SECONDS);
 ```
 
 ###Creating tweens
-Tweening a variable named x from 0 to 1024 in 1000 millseconds. 
+Tweening a variable named x from 0 to 1024 in 100 frames. 
 ```javascript  
 //createTween(property, end, duration, [delay], [easing])
 var x = 0;
-var t = createTween("x", 1024, 1000).play(); 
+var t = createTween("x", 1024, 100).play(); 
 ```
 or
 ```javascript 
@@ -40,27 +40,27 @@ or
 var x = 0;
 
 // if no object is passed it will default to window
-var t = createTween(window, "x", 1024, 1000).play(); 
+var t = createTween(window, "x", 1024, 100).play(); 
 ``` 
 or
 ```javascript 
 //createTween(property, [start,end], duration, [delay], [easing])
 
  // object defaults to window and the variable x is defined in window with a starting value of 0
-var t = createTween("x", [0,1024],1000).play();
+var t = createTween("x", [0,1024],100).play();
 ```
 
 Tweening multiple variables and object properties
 ```javascript
 //createTween(duration, [delay], [easing])
-var t = createTween(1000).add(window, "x", [0,1024]).add(window, "y", [0,768]).add(window, "size", [0,100]).play();
+var t = createTween(100).add(window, "x", [0,1024]).add(window, "y", [0,768]).add(window, "size", [0,100]).play();
 ```
 or
 ```javascript
 //createTween(duration, [delay], [easing])
 
 // object defaults to window
-var t = createTween(1000).add("x", [0,1024]).add("y", [0,768]).add("size", [0,100]).play(); 
+var t = createTween(100).add("x", [0,1024]).add("y", [0,768]).add("size", [0,100]).play(); 
 ```
 
 You can also call play and stop on all motion objects using
@@ -88,21 +88,21 @@ useOnce();
 ###Easing
 You can add easing to to Tweens using the Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back, Bounce classes. Each class has a In, Out, InOut function. 
 ```javascript
-var t = createTween("w", 1024, 1000, 0,Quad.In).play(); 
+var t = createTween("w", 1024, 100, 0,Quad.In).play(); 
 ```
 or
 ```javascript
-var t = createTween("w", 1024, 1000).easing(Quad.In).play(); 
+var t = createTween("w", 1024, 100).easing(Quad.In).play(); 
 ```
 
 ###Delaying
 ```javascript
 //delays for 500 milliseconds
-var t = createTween("w", 1024, 1000, 500).play(); 
+var t = createTween("w", 1024, 100, 500).play(); 
 ```
 or
 ```javascript
-var t = createTween("w", 1024, 1000).delay(500).play();
+var t = createTween("w", 1024, 100).delay(500).play();
 ```
 
 ###Pausing, Resuming  
