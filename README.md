@@ -15,17 +15,39 @@ Production: [p5.ijeoma.min.js](http://goo.gl/Aeb2UP)
 [Square](http://ekeneijeoma.github.io/p5.ijeoma.js/examples/square.html) 
 
 #Getting Started 
+###Timing
+Timing for all MOTION instances can either be in 
+```javascript
+//sets timing to frames which is the default
+timeMode(FRAMES);
+```
+or
+```javascript
+//sets timing to seconds
+timeMode(SECONDS);
+```
+
 ###Creating tweens
 Tweening a variable named x from 0 to 1024 in 1000 millseconds. 
-```javascript 
-//createTween(object, property, end, duration, [delay], [easing])
+```javascript  
+//createTween(property, end, duration, [delay], [easing])
 var x = 0;
-var t = createTween(window, "x", 1024, 1000).play(); // if no object is passed it will default to window
+var t = createTween("x", 1024, 1000).play(); 
 ```
 or
 ```javascript 
+//createTween(object property, end, duration, [delay], [easing])
+var x = 0;
+
+// if no object is passed it will default to window
+var t = createTween(window, "x", 1024, 1000).play(); 
+``` 
+or
+```javascript 
 //createTween(property, [start,end], duration, [delay], [easing])
-var t = createTween("x", [0,1024],1000).play(); // object defaults to window and the variable x is defined in window with a starting value of 0
+
+ // object defaults to window and the variable x is defined in window with a starting value of 0
+var t = createTween("x", [0,1024],1000).play();
 ```
 
 Tweening multiple variables and object properties
@@ -36,16 +58,19 @@ var t = createTween(1000).add(window, "x", [0,1024]).add(window, "y", [0,768]).a
 or
 ```javascript
 //createTween(duration, [delay], [easing])
-var t = createTween(1000).add("x", [0,1024]).add("y", [0,768]).add("size", [0,100]).play(); // object defaults to window
+
+// object defaults to window
+var t = createTween(1000).add("x", [0,1024]).add("y", [0,768]).add("size", [0,100]).play(); 
 ```
 
 You can also call play and stop on all motion objects using
 ```javascript
+//applies calls to all MOTION instances
 playAll();
 stopAll();
 ```
 
-##Destroying tweens
+###Destroying tweens
 ```javascript
 Motion.remove(motion)
 ```
@@ -56,13 +81,24 @@ createTween(...).useOnce();
 ```
 or
 ```javascript
-//applies call to all tween instances
+//applies call to all MOTION instances
 useOnce();
+```
+
+###Easing
+You can add easing to to Tweens using the Quad, Cubic, Quart, Quint, Sine, Expo, Circ, Elastic, Back, Bounce classes. Each class has a In, Out, InOut function. 
+```javascript
+var t = createTween("w", 1024, 1000, 0,Quad.In).play(); 
+```
+or
+```javascript
+var t = createTween("w", 1024, 1000).easing(Quad.In).play(); 
 ```
 
 ###Delaying
 ```javascript
-var t = createTween("w", 1024, 1000, 500).play(); //delay for 500 milliseconds
+//delays for 500 milliseconds
+var t = createTween("w", 1024, 1000, 500).play(); 
 ```
 or
 ```javascript
@@ -82,7 +118,8 @@ seekAll(position);
 
 ###Repeating
 ```javascript
-var t = createTween(...).repeat().play();
+// if no duration is passed it will repeat forever
+var t = createTween(...).repeat([duration]).play();
 
 repeatAll([duration]);
 ```
@@ -96,7 +133,8 @@ reverseAll();
 
 ###Changing speed/timescale
 ```javascript 
-var t = createTween(...).timeScale(2) //plays back twice as fast
+//plays back twice as fast
+var t = createTween(...).timeScale(2) 
 
 timeScaleAll(time);
 ``` 
@@ -104,8 +142,10 @@ timeScaleAll(time);
 ##Playing back tweens in parallel
 ```javascript 
 timeMode(FRAMES); //frames by default
-p = beginParallel() // returns MOTION.Parallel() object
-  tween(...) // same arguments and functions as createTween()
+// returns MOTION.Parallel() object
+p = beginParallel() 
+  //same arguments and functions as createTween()
+  tween(...
   tween(...)
 endParallel();
 p.play()
@@ -114,7 +154,8 @@ p.play()
 
 ##Playing back tweens in sequence
 ```javascript 
-var s = beginSequence(); // returns MOTION.Sequence() object
+// returns MOTION.Sequence() object
+var s = beginSequence(); 
   tween(...)
   tween(...)
 endSequence()
@@ -123,7 +164,8 @@ s.play();
 
 ##Playing back tweens in a timeline
 ```javascript 
-var t = beginTimeline(); // returns MOTION.Timeline() object
+// returns MOTION.Timeline() object
+var t = beginTimeline(); 
   beginKeyframe(100);
     tween(...)
   endKeyframe();
