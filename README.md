@@ -54,7 +54,7 @@ var t = createTween("x", [0,1024],100).play();
 
 Tweening using relative and absolute start and end values
 ```javascript
-//tweens from defined start to end values every play
+//the default which tweens from defined start to end values every play
 valueMode(ABSOLUTE) 
 ```
 or
