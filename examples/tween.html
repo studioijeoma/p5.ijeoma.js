@@ -23,8 +23,7 @@
     <script language="javascript" src="js/p5.js"></script>
     <script language="javascript" src="js/ijeoma.js"></script>
     <script language="javascript" src="../build/p5.ijeoma.js"></script>
-    <script language="javascript">  
-    var tx
+    <script language="javascript">   
     function setup() {
         createCanvas(windowWidth, windowHeight);
         noStroke();
@@ -33,16 +32,20 @@
 
         tx =-width; 
         c = randomColor();
-        t = createTween('tx',width, 25) 
-            .onUpdate(function() { 
-                time.innerHTML = tx | 0;
-            }) 
-            .reverse()
+        t = createTween('tx', width, 50, 0, Quad.InOut)  
             .repeat()
+            .reverse()
             .play()
+            .onUpdate(function() { 
+                time.innerHTML = this.time | 0; 
+            }) 
+            .onRepeat(function() {
+                c = randomColor();
+            })
     }
 
     function draw() {
+        background(255)
         fill(c);
         rect(tx, 0, width, height);
     }

@@ -11,6 +11,47 @@
 
     _timeMode = MOTION.FRAMES;
 
+    Quad = MOTION.Quad;
+    Quad.In = MOTION.Quad.In;
+    Quad.Out = MOTION.Quad.Out;
+    Quad.InOut = MOTION.Quad.InOut;
+    Cubic = MOTION.Cubic;
+    Cubic.In = MOTION.Cubic.In;
+    Cubic.Out = MOTION.Cubic.Out;
+    Cubic.InOut = MOTION.Cubic.InOut;
+    Quart = MOTION.Quart;
+    Quart.In = MOTION.Quart.In;
+    Quart.Out = MOTION.Quart.Out;
+    Quart.InOut = MOTION.Quart.InOut;
+    Quint = MOTION.Quint;
+    Quint.In = MOTION.Quint.In;
+    Quint.Out = MOTION.Quint.Out;
+    Quint.InOut = MOTION.Quint.InOut;
+    Sine = MOTION.Sine;
+    Sine.In = MOTION.Sine.In;
+    Sine.Out = MOTION.Sine.Out;
+    Sine.InOut = MOTION.Sine.InOut;
+    Expo = MOTION.Expo;
+    Expo.In = MOTION.Expo.In;
+    Expo.Out = MOTION.Expo.Out;
+    Expo.InOut = MOTION.Expo.InOut;
+    Circ = MOTION.Circ;
+    Circ.In = MOTION.Circ.In;
+    Circ.Out = MOTION.Circ.Out;
+    Circ.InOut = MOTION.Circ.InOut;
+    Elastic = MOTION.Elastic;
+    Elastic.In = MOTION.Elastic.In;
+    Elastic.Out = MOTION.Elastic.Out;
+    Elastic.InOut = MOTION.Elastic.InOut;
+    Back = MOTION.Back;
+    Back.In = MOTION.Back.In;
+    Back.Out = MOTION.Back.Out;
+    Back.InOut = MOTION.Back.InOut;
+    Bounce = MOTION.Bounce;
+    Bounce.In = MOTION.Bounce.In;
+    Bounce.Out = MOTION.Bounce.Out;
+    Bounce.InOut = MOTION.Bounce.InOut;
+
     MOTION.setTimeMode = function(timeMode) {
         _timeMode = timeMode;
 
@@ -24,7 +65,7 @@
     };
 
     MOTION.update = function(time) {
-        MOTION._time = typeof time !== 'undefined' ? time : (_timeMode === MOTION.SECONDS) ? millis() : frameCount;  
+        MOTION._time = typeof time !== 'undefined' ? time : (_timeMode === MOTION.SECONDS) ? millis() : frameCount;
 
         for (var i = 0; i < MOTION._motions.length; i++)
             if (_isAutoUpdating && !MOTION._motions[i]._hasController)
@@ -72,10 +113,10 @@
         if (arguments[0] instanceof MOTION.Property) {
             p = arguments[0];
         } else if (typeof arguments[0] == 'object') {
-            if(typeof object[property] !== 'undefined')
+            if (typeof object[property] !== 'undefined')
                 v = (object[property] instanceof Array) ? object[property][0] : object[property];
             else
-                v = (end instanceof Array) ? end[0] : end; 
+                v = (end instanceof Array) ? end[0] : end;
 
             if (typeof v == 'number')
                 p = new MOTION.NumberProperty(object, property, end);
@@ -85,11 +126,11 @@
                 p = new MOTION.VectorProperty(object, property, end);
             else
                 console.warn('Only numbers, p5.colors and p5.vectors are supported.');
-        } else { 
-            if(typeof window[arguments[0]] !== 'undefined')
+        } else {
+            if (typeof window[arguments[0]] !== 'undefined')
                 v = (window[arguments[0]] instanceof Array) ? window[arguments[0]][0] : window[arguments[0]];
             else
-                v = (end instanceof Array) ? end[0] : end; 
+                v = (end instanceof Array) ? end[0] : end;
 
             if (typeof v == 'number')
                 p = new MOTION.NumberProperty(window, arguments[0], arguments[1]);
@@ -101,7 +142,7 @@
                 console.warn('Only numbers, p5.colors and p5.vectors are supported.');
         }
 
-        this._properties.push(p); 
+        this._properties.push(p);
 
         return this;
     };

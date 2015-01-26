@@ -4,26 +4,27 @@
         padding: 0;
         margin: 0;
     }
-    div { 
+    div {
         position: absolute;
         z-index: 100;
-        padding: 10px 0 0 10px; 
+        padding: 10px 0 0 10px;
     }
     </style>
 </head>
+
 <body>
     <div>
         <button id="play">Play</button>
         <button id="stop">Stop</button>
-        <button id="time"></button> 
+        <button id="time"></button>
     </div>
 
     <script language="javascript" src="js/p5.js"></script>
     <script language="javascript" src="js/ijeoma.js"></script>
     <script language="javascript" src="../build/p5.ijeoma.js"></script>
-    <script language="javascript">    
+    <script language="javascript">
     function setup() {
-        createCanvas(windowWidth, windowHeight); 
+        createCanvas(windowWidth, windowHeight);
 
         bgColor = color(0);
 
@@ -38,29 +39,29 @@
             createVector(0, 0)
         ];
         sq.point = sq.points[0];
-        sq.color= randomColor();
+        sq.color = randomColor();
 
         txSize = height - height / 2;
 
         frames();
         s = beginSequence();
         easing(Quad.Out)
-        tween(sq, 'point', sq.points[1], 25) 
+        tween(sq, 'point', sq.points[1], 25)
         tween(sq, 'point', sq.points[2], 25)
         tween(sq, 'point', sq.points[3], 25)
         tween(sq, 'point', sq.points[0], 25)
         easing(Bounce.InOut);
         tween(sq, 'scale', 4, 50);
-        endSequence(); 
-        s.repeat().onRepeat(function() { 
-            bgColor = sq.color;
-            sq.color = randomColor();
+        endSequence();
+        s.repeat().onRepeat(function() {
+                bgColor = sq.color;
+                sq.color = randomColor();
 
-            if(this.repeatTime() == 10)
-                this.play()
-        })
-        .play()
-        
+                if (this.repeatTime() == 10)
+                    this.play()
+            })
+            .play()
+
         textAlign(CENTER)
         textSize(txSize);
 
@@ -76,30 +77,31 @@
 
         var j = s.currentIndex();
 
-        stroke(sq.color); 
+        stroke(sq.color);
 
         beginShape();
         for (var i = 0; i <= j; i++)
             vertex(sq.points[i].x, sq.points[i].y)
 
-        if(j > 0 &&  j <s.count() - 1){
+        if (j > 0 && j < s.count() - 1) {
             noFill();
             endShape();
 
-            line(sq.points[j].x, sq.points[j].y, sq.point.x, sq.point.y) 
-        }else{
+            line(sq.points[j].x, sq.points[j].y, sq.point.x, sq.point.y)
+        } else {
             fill(sq.color);
             endShape(CLOSE);
-        } 
+        }
         pop();
 
         noStroke()
         fill(sq.color);
-        text(s.repeatTime() + 1, width / 2, height / 2 + txSize / 3 );
+        textAlign(CENTER);
+        text(s.repeatTime() + 1 + '', width / 2+30, height / 2 + txSize / 3);
 
         document.getElementById('time').innerHTML = s.time() | 0;
     }
-    
+
     document.getElementById('play').onclick = function() {
         s.play();
     }
@@ -111,4 +113,4 @@
         return color(random(255), random(255), random(255))
     }
     </script>
-</body> 
+</body>

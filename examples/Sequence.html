@@ -4,13 +4,14 @@
         padding: 0;
         margin: 0;
     }
-    div { 
+    div {
         position: absolute;
         z-index: 100;
-        padding: 10px 0 0 10px; 
+        padding: 10px 0 0 10px;
     }
     </style>
 </head>
+
 <body>
     <div>
         <button id="play">Play</button>
@@ -18,67 +19,67 @@
         <button id="time"></button>
         <button>Click and drag left to right to scrub</button>
     </div>
- 
+
     <script language="javascript" src="js/p5.js"></script>
     <script language="javascript" src="js/ijeoma.js"></script>
     <script language="javascript" src="../build/p5.ijeoma.js"></script>
-    <script language="javascript">  
-        function setup() {
-            createCanvas(windowWidth, windowHeight);
+    <script language="javascript">
+    function setup() {
+        createCanvas(windowWidth, windowHeight);
 
-            h = height / 4;
+        h = height / 4;
 
-            c1 = randomColor(), c2 = randomColor(), c3 = randomColor(), c4 = randomColor();
-            x1 = x3 = -width;
-            x2 = x4 = width;
+        c1 = randomColor(), c2 = randomColor(), c3 = randomColor(), c4 = randomColor();
+        x1 = x3 = -width;
+        x2 = x4 = width;
 
-            var d = 50;
+        var d = 50;
 
-            s = beginSequence(); 
-            easing(Sine.Out);
-            tween(d).add("x1", width).add("c1", randomColor());
-            tween(d).add("x2", -width).add("c2", randomColor());
-            tween(d).add("x3", width).add("c3", randomColor());
-            tween(d).add("x4", -width).add("c4", randomColor());
-            endSequence();
-           s.reverse().repeat().play();
-        }
+        s = beginSequence();
+        easing(Sine.Out);
+        tween(d).add("x1", width).add("c1", randomColor());
+        tween(d).add("x2", -width).add("c2", randomColor());
+        tween(d).add("x3", width).add("c3", randomColor());
+        tween(d).add("x4", -width).add("c4", randomColor());
+        endSequence();
+        s.reverse().repeat().play();
+    }
 
-        function draw() {
-            background(255);
+    function draw() {
+        background(255);
 
-            noStroke();
+        noStroke();
 
-            fill(c1);
-            rect(x1, 0, width, h);
-            fill(c2);
-            rect(x2, h, width, h);
-            fill(c3);
-            rect(x3, h * 2, width, h);
-            fill(c4);
-            rect(x4, h * 3, width, h); 
-        }
+        fill(c1);
+        rect(x1, 0, width, h);
+        fill(c2);
+        rect(x2, h, width, h);
+        fill(c3);
+        rect(x3, h * 2, width, h);
+        fill(c4);
+        rect(x4, h * 3, width, h);
+    }
 
-        function keyPressed() {
-            play();
-        }
+    function keyPressed() {
+        play();
+    }
 
-        function mousePressed() {
-            pause();
-        }
+    function mousePressed() {
+        pause();
+    }
 
-        function mouseReleased() {
-            resume();
-        }
+    function mouseReleased() {
+        resume();
+    }
 
-        function mouseDragged() {
-            seek(mouseX / width);
-        }
+    function mouseDragged() {
+        seek(mouseX / width);
+    }
 
-        function randomColor() {
-            return color(random(255), random(255), random(255));
-        }
-    </script>  
+    function randomColor() {
+        return color(random(255), random(255), random(255));
+    }
+    </script>
 </body>
 
 </html>

@@ -4,13 +4,14 @@
         padding: 0;
         margin: 0;
     }
-    div { 
+    div {
         position: absolute;
         z-index: 100;
-        padding: 10px 0 0 10px; 
+        padding: 10px 0 0 10px;
     }
     </style>
 </head>
+
 <body>
     <div>
         <button id="play">Play</button>
@@ -18,53 +19,53 @@
         <button id="time"></button>
         <button>Click and drag left to right to scrub</button>
     </div>
- 
+
     <script language="javascript" src="js/p5.js"></script>
     <script language="javascript" src="js/ijeoma.js"></script>
     <script language="javascript" src="../build/p5.ijeoma.js"></script>
-    <script language="javascript">  
+    <script language="javascript">
     function setup() {
-        createCanvas(windowWidth, windowHeight); 
+        createCanvas(windowWidth, windowHeight);
 
-         var rectH = window.innerHeight;
+        var rectH = window.innerHeight;
 
         rect1 = {};
         rect2 = {};
 
         p = beginParallel();
-        tween(100)
+        tween(75)
             .add(rect1, 'y', [-rectH, rectH])
-            .add(rect1, 'color', [randomColor(),randomColor()])
-            .onEnd(function(){
+            .add(rect1, 'color', [randomColor(), randomColor()])
+            .onEnd(function() {
                 this.get('color').end(randomColor());
-            }); 
-        tween(100)
+            });
+        tween(75)
             .add(rect2, 'y', [rectH, -rectH])
-            .add(rect2, 'color', [randomColor(),randomColor()])
-            .onEnd(function(){
+            .add(rect2, 'color', [randomColor(), randomColor()])
+            .onEnd(function() {
                 this.get('color').end(randomColor());
-            }); 
+            });
         endParallel();
-        p.onUpdate(function() {
-            document.getElementById('time').innerHTML = this.getTime() | 0;
-        })
-        .onEnd(function() {   
-            this.play();
-        })
-        .play();
+        p.play()
+            .onUpdate(function() {
+                document.getElementById('time').innerHTML = this.getTime() | 0;
+            })
+            .onEnd(function() {
+                this.play();
+            })
     }
 
     function draw() {
         background(255);
- 
-        stroke(255);
-        fill(255 / 2); 
 
-        fill(rect1.color); 
-        rect(0,rect1.y,width/2,height)
+        stroke(255);
+        fill(255 / 2);
+
+        fill(rect1.color);
+        rect(0, rect1.y, width / 2, height)
 
         fill(rect2.color);
-        rect(width/2,rect2.y,width/2,height)  
+        rect(width / 2, rect2.y, width / 2, height)
     }
 
     function keyPressed() {
@@ -91,7 +92,7 @@
     }
 
     function randomColor() {
-        return color(random(255),random(255),random(255));
+        return color(random(255), random(255), random(255));
     }
     </script>
-</body> 
+</body>
