@@ -17,6 +17,23 @@ module.exports = function(grunt) {
                 dest: 'build/p5.ijeoma.min.js'
             }
         },
+        // bump: {
+        //     options: {
+        //         files: ['package.json'],
+        //         updateConfigs: [],
+        //         commit: true,
+        //         commitMessage: 'Release v%VERSION%',
+        //         commitFiles: ['package.json'],
+        //         createTag: true,
+        //         tagName: 'v%VERSION%',
+        //         tagMessage: 'Version %VERSION%',
+        //         push: true,
+        //         // pushTo: 'upstream',
+        //         pushTo: 'origin',
+        //         gitDescribeOptions: '--tags --always --abbrev=1 --dirty=-d',
+        //         globalReplace: false
+        //     }
+        // },
         watch: {
             scripts: {
                 files: ['src/*.js', 'examples/*.html'],
@@ -31,7 +48,11 @@ module.exports = function(grunt) {
 
     grunt.loadNpmTasks('grunt-contrib-concat');
     grunt.loadNpmTasks('grunt-contrib-uglify');
+    // grunt.loadNpmTasks('grunt-bump');
     grunt.loadNpmTasks('grunt-contrib-watch');
 
+    // grunt.registerTask('default', ['concat', 'uglify', 'bump', 'watch']);
     grunt.registerTask('default', ['concat', 'uglify', 'watch']);
 };
+
+
