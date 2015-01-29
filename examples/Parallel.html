@@ -46,13 +46,7 @@
                 this.get('color').end(randomColor());
             });
         endParallel();
-        p.play()
-            .onUpdate(function() {
-                document.getElementById('time').innerHTML = this.getTime() | 0;
-            })
-            .onEnd(function() {
-                this.play();
-            })
+        p.play().repeat();
     }
 
     function draw() {
@@ -66,6 +60,8 @@
 
         fill(rect2.color);
         rect(width / 2, rect2.y, width / 2, height)
+
+        document.getElementById('time').innerHTML = p.getTime() | 0;
     }
 
     function keyPressed() {

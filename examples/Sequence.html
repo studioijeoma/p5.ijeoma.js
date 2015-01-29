@@ -58,22 +58,24 @@
         rect(x3, h * 2, width, h);
         fill(c4);
         rect(x4, h * 3, width, h);
+
+        document.getElementById('time').innerHTML = s.time() | 0;
     }
 
     function keyPressed() {
-        play();
+        s.play();
     }
 
     function mousePressed() {
-        pause();
+        s.pause();
     }
 
     function mouseReleased() {
-        resume();
+        s.resume();
     }
 
     function mouseDragged() {
-        seek(mouseX / width);
+        s.seek(mouseX / width);
     }
 
     function randomColor() {
