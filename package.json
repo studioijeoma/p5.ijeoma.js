@@ -1,7 +1,7 @@
 {
     "name": "p5.ijeoma.js",
     "filename": "p5.ijeoma.min.js",
-    "version": "1.0.1",
+    "version": "1.0.0",
     "description": "A p5.js addon for animating HTML5 and javascript properties",
     "homepage": "https://github.com/ekeneijeoma/p5.ijeoma.js",
     "keywords": [
